@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
 export const siteTitle = 'CHEERVOTE';
 
-export default function Layout({ children }: { children: any }) {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <nav className='sticky -top-0 z-50 bg-white dark:bg-gray-800 border-b'>
@@ -13,17 +14,17 @@ export default function Layout({ children }: { children: any }) {
             </Link>
           </li>
           <li className='py-4 px-2 hover:font-bold list-none hover:text-blue-400 hover:border-b-4 hover:border-blue-400'>
-            <Link href='/hr_members'>
+            <Link href='/hr-members'>
               <a>衆議院議員</a>
             </Link>
           </li>
           <li className='py-4 px-2 hover:font-bold list-none hover:text-blue-400 hover:border-b-4 hover:border-blue-400'>
-            <Link href='/hc_members'>
+            <Link href='/hc-members'>
               <a>参議院議員</a>
             </Link>
           </li>
           <li className='py-4 px-2 hover:font-bold list-none hover:text-blue-400 hover:border-b-4 hover:border-blue-400'>
-            <Link href='/political_parties'>
+            <Link href='/political-parties'>
               <a>政党別国会議員</a>
             </Link>
           </li>
@@ -32,4 +33,6 @@ export default function Layout({ children }: { children: any }) {
       <main>{children}</main>
     </>
   );
-}
+};
+
+export default Layout;

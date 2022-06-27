@@ -1,8 +1,8 @@
+import { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import Layout, { siteTitle } from '../components/layout';
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
     <Layout>
       <Head>
@@ -11,4 +11,6 @@ export default function Home() {
       <h1 className='flex justify-center m-2 text-8xl font-semibold tracking-wider leading-tight'>CHEERVOTE</h1>
     </Layout>
   );
-}
+};
+
+export default Home;
