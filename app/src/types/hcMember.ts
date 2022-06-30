@@ -1,5 +1,5 @@
-import { HcConstituency } from './hcConstituency';
-import { Politician } from './politician';
+import { HcConstituency } from 'types/hcConstituency';
+import { Politician } from 'types/politician';
 
 export type HcMemberOfHcConstituency = {
   id: number;

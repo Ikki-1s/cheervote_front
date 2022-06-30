@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import { HrPrBlock } from '../types/hrPrBlock';
+import { HrPrBlock } from 'types/hrPrBlock';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (arg: unknown): arg is Record<string, unknown> => {

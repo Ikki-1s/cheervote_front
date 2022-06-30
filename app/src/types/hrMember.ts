@@ -1,4 +1,4 @@
-import { Politician } from './politician';
+import { Politician } from 'types/politician';
 
 export type HrMemberOfPrefecture = {
   id: number;

@@ -1,11 +1,11 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import Layout from '../../../components/layout';
-import { getHcConstituencyName, getAllHcConstituenciesIds } from '../../../libs/hcConstituencies';
-import { getHcMembersOfHcConstituencyData } from '../../../libs/hcMembers';
+import Layout from 'components/layout';
+import { getHcConstituencyName, getAllHcConstituenciesIds } from 'libs/hcConstituencies';
+import { getHcMembersOfHcConstituencyData } from 'libs/hcMembers';
 
-import { HcMemberOfHcConstituency } from '../../../types/hcMember';
+import { HcMemberOfHcConstituency } from 'types/hcMember';
 
 const HcMemberOfHcConstituency: NextPage<Props> = ({
   hcConstituencyName,

@@ -1,9 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import Layout from '../../../components/layout';
-import { getHrMembersOfHrPrBlockData } from '../../../libs/hrMembers';
-import { getAllHrPrBlocksIds, getHrPrBlockName } from '../../../libs/hrPrBlocks';
-import { HrMemberOfHrPrBlock } from '../../../types/hrMember';
+
+import Layout from 'components/layout';
+import { getHrMembersOfHrPrBlockData } from 'libs/hrMembers';
+import { getAllHrPrBlocksIds, getHrPrBlockName } from 'libs/hrPrBlocks';
+import { HrMemberOfHrPrBlock } from 'types/hrMember';
 
 const HrMemberOfHrPrBlock: NextPage<Props> = ({ hrPrBlockName, hrMembersOfHrPrBlockData }) => {
   return (

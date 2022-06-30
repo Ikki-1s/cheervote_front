@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-import { HcMemberOfHcConstituency, HcMemberOfHcPr } from '../types/hcMember';
-import { PoliticalPartyOfPolitician } from '../types/politicalParty';
+import { HcMemberOfHcConstituency, HcMemberOfHcPr } from 'types/hcMember';
+import { PoliticalPartyOfPolitician } from 'types/politicalParty';
 
 // ユーザー定義型ガード
 // const isPropertyAccessible = (data: unknown): data is { [key: string]: unknown } => {

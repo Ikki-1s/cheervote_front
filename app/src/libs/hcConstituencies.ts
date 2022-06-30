@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import { HcConstituency } from '../types/hcConstituency';
+import { HcConstituency } from 'types/hcConstituency';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (arg: unknown): arg is { [key: string]: unknown } => {
