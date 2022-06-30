@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from 'next';
 
-import Layout from '../../../components/layout';
-import { getHcMembresOfHcPrData } from '../../../libs/hcMembers';
+import Layout from 'components/layout';
+import { getHcMembresOfHcPrData } from 'libs/hcMembers';
 
-import { HcMemberOfHcPr } from '../../../types/hcMember';
+import { HcMemberOfHcPr } from 'types/hcMember';
 
 const HcPr: NextPage<Props> = ({ hcMembresOfHcPrData }) => {
   return (

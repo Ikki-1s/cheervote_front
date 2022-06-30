@@ -6,10 +6,10 @@ import {
   GetStaticPropsContext,
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import Layout from '../../../components/layout';
-import { getHrMembersOfPrefectureData } from '../../../libs/hrMembers';
-import { getAllPrefecturesIds, getPrefectureName } from '../../../libs/prefectures';
-import { HrMemberOfPrefecture } from '../../../types/hrMember';
+import Layout from 'components/layout';
+import { getHrMembersOfPrefectureData } from 'libs/hrMembers';
+import { getAllPrefecturesIds, getPrefectureName } from 'libs/prefectures';
+import { HrMemberOfPrefecture } from 'types/hrMember';
 
 const HrMemberOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPrefectureData }) => {
   return (

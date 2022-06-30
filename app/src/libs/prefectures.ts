@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import { Prefecture } from '../types/prefecture';
+import { Prefecture } from 'types/prefecture';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (value: unknown): value is { [key: string]: unknown } => {

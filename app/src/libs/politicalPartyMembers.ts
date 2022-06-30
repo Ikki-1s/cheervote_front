@@ -4,7 +4,7 @@ import {
   HcMember,
   PoliticalPartyHrMember,
   PoliticalPartyHcMember,
-} from '../types/politicalPartyMember';
+} from 'types/politicalPartyMember';
 
 // ユーザー定義型ガード
 // const isPropertyAccessible = (data: unknown): data is { [key: string]: unknown } => {

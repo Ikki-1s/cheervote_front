@@ -1,4 +1,4 @@
-import { PoliticalPartyOfPolitician } from './politicalParty';
+import { PoliticalPartyOfPolitician } from 'types/politicalParty';
 
 export type Politician = {
   id: number;

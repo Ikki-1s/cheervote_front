@@ -1,15 +1,15 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import Layout from '../../components/layout';
+import Layout from 'components/layout';
 import {
   getPoliticalPartyName,
   getPoliticalPartiesHavingActiveMembersIds,
-} from '../../libs/politicalParties';
+} from 'libs/politicalParties';
 import {
   getPoliticalPartyHcMembersData,
   getPoliticalPartyHrMembersData,
-} from '../../libs/politicalPartyMembers';
+} from 'libs/politicalPartyMembers';
 
 import { PoliticalPartyHrMember, PoliticalPartyHcMember } from '../../types/politicalPartyMember';
 
