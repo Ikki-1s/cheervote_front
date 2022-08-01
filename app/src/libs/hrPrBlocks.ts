@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { HrPrBlock } from 'types/hrPrBlock';
 
@@ -18,8 +18,8 @@ const isHrPrBlock = (arg: unknown): arg is HrPrBlock => {
 };
 
 export const getAllHrPrBlocksData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks`, { method: 'GET' });
-  const allHrPrBlocksData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks`);
+  const allHrPrBlocksData = await res.data;
   if (Array.isArray(allHrPrBlocksData) && allHrPrBlocksData.every(isHrPrBlock)) {
     return allHrPrBlocksData;
   } else {
@@ -28,10 +28,8 @@ export const getAllHrPrBlocksData = async () => {
 };
 
 export const getAllHrPrBlocksIds = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks`, {
-    method: 'GET',
-  });
-  const allHrPrBlocksData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks`);
+  const allHrPrBlocksData = await res.data;
 
   if (Array.isArray(allHrPrBlocksData) && allHrPrBlocksData.every(isHrPrBlock)) {
     return allHrPrBlocksData.map((hrPrBlockData) => {
@@ -47,10 +45,8 @@ export const getAllHrPrBlocksIds = async () => {
 };
 
 export const getHrPrBlockName = async (hrPrBlockId: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks/${hrPrBlockId}`, {
-    method: 'GET',
-  });
-  const hrPrBlockData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hr_pr_blocks/${hrPrBlockId}`);
+  const hrPrBlockData = await res.data;
 
   if (Array.isArray(hrPrBlockData) && hrPrBlockData.every(isHrPrBlock)) {
     const hrPrBlockName = hrPrBlockData[0].block_name;

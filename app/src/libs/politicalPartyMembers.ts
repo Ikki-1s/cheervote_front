@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
+
 import {
   HrMember,
   HcMember,
@@ -108,11 +109,15 @@ const isPoliticalPartyHcMember = (arg: unknown): arg is PoliticalPartyHcMember =
 
 // 指定した政党の衆議院議員を取得
 export const getPoliticalPartyHrMembersData = async (politicalPartyId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/political_party_members/hr_members/${politicalPartyId}`,
-    { method: 'GET' },
   );
-  const politicalPartyHrMembersData = await res.json();
+  const politicalPartyHrMembersData = await res.data;
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_API_URL}/political_party_members/hr_members/${politicalPartyId}`,
+  //   { method: 'GET' },
+  // );
+  // const politicalPartyHrMembersData = await res.json();
   if (
     Array.isArray(politicalPartyHrMembersData) &&
     politicalPartyHrMembersData.every(isPoliticalPartyHrMember)
@@ -125,11 +130,10 @@ export const getPoliticalPartyHrMembersData = async (politicalPartyId: string) =
 
 // 指定した政党の参議院議員を取得
 export const getPoliticalPartyHcMembersData = async (politicalPartyId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/political_party_members/hc_members/${politicalPartyId}`,
-    { method: 'GET' },
   );
-  const politicalPartyHcMembersData = await res.json();
+  const politicalPartyHcMembersData = await res.data;
 
   if (
     Array.isArray(politicalPartyHcMembersData) &&

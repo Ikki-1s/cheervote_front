@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { PoliticalParty, PoliticalPartyHavingActiveMember } from 'types/politicalParty';
 
@@ -29,10 +29,8 @@ const isPoliticalParty = (arg: unknown): arg is PoliticalParty => {
 // ・所属国会議員数（衆議院＋参議院）の多い政党順
 // ・現在所属議員のいない政党は除外
 export const getPoliticalPartiesHavingActiveMembersData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/political_parties/active`, {
-    method: 'GET',
-  });
-  const politicalPartiesHavingActiveMembers = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/political_parties/active`);
+  const politicalPartiesHavingActiveMembers = await res.data;
 
   if (
     Array.isArray(politicalPartiesHavingActiveMembers) &&
@@ -45,10 +43,8 @@ export const getPoliticalPartiesHavingActiveMembersData = async () => {
 };
 
 export const getPoliticalPartiesHavingActiveMembersIds = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/political_parties/active`, {
-    method: 'GET',
-  });
-  const politicalPartiesHavingActiveMembers = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/political_parties/active`);
+  const politicalPartiesHavingActiveMembers = await res.data;
 
   if (
     Array.isArray(politicalPartiesHavingActiveMembers) &&
@@ -67,13 +63,10 @@ export const getPoliticalPartiesHavingActiveMembersIds = async () => {
 };
 
 export const getPoliticalPartyName = async (politicalPartyId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/political_parties/${politicalPartyId}`,
-    {
-      method: 'GET',
-    },
   );
-  const politicalPartyData = await res.json();
+  const politicalPartyData = await res.data;
 
   if (Array.isArray(politicalPartyData) && politicalPartyData.every(isPoliticalParty)) {
     const politicalPartyName = politicalPartyData[0].name_kanji;

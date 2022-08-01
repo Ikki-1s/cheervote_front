@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { HrMemberOfPrefecture, HrMemberOfHrPrBlock } from 'types/hrMember';
 import { PoliticalPartyOfPolitician } from 'types/politicalParty';
@@ -76,13 +76,10 @@ const isHrMemberOfHrPrBlock = (arg: unknown): arg is HrMemberOfHrPrBlock => {
 
 // 都道府県ごとの小選挙区選出衆議院議員を取得
 export const getHrMembersOfPrefectureData = async (prefectureId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/hr_members/prefectures/${prefectureId}`,
-    {
-      method: 'GET',
-    },
   );
-  const hrMembersOfPrefectureData = await res.json();
+  const hrMembersOfPrefectureData = await res.data;
   if (
     Array.isArray(hrMembersOfPrefectureData) &&
     hrMembersOfPrefectureData.every(isHrMemberOfPrefecture)
@@ -95,13 +92,10 @@ export const getHrMembersOfPrefectureData = async (prefectureId: string) => {
 
 // 比例代表ブロックごとの比例代表ブロック選出衆議院議員を取得
 export const getHrMembersOfHrPrBlockData = async (hrPrBlockId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/hr_members/hr_pr_blocks/${hrPrBlockId}`,
-    {
-      method: 'GET',
-    },
   );
-  const hrMembersOfHrPrBlockData = await res.json();
+  const hrMembersOfHrPrBlockData = await res.data;
   if (
     Array.isArray(hrMembersOfHrPrBlockData) &&
     hrMembersOfHrPrBlockData.every(isHrMemberOfHrPrBlock)

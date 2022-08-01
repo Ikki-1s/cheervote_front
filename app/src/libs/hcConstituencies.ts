@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { HcConstituency } from 'types/hcConstituency';
 
@@ -16,10 +16,8 @@ const isHcConstituency = (arg: unknown): arg is HcConstituency => {
 };
 
 export const getAllHcConstituenciesData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hc_constituencies`, {
-    method: 'GET',
-  });
-  const allHcConstituenciesData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hc_constituencies`);
+  const allHcConstituenciesData = await res.data;
 
   if (Array.isArray(allHcConstituenciesData) && allHcConstituenciesData.every(isHcConstituency)) {
     return allHcConstituenciesData;
@@ -29,10 +27,9 @@ export const getAllHcConstituenciesData = async () => {
 };
 
 export const getAllHcConstituenciesIds = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hc_constituencies`, {
-    method: 'GET',
-  });
-  const allHcConstituencyData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hc_constituencies`);
+  const allHcConstituencyData = await res.data;
+
   if (Array.isArray(allHcConstituencyData) && allHcConstituencyData.every(isHcConstituency)) {
     return allHcConstituencyData.map((hcConstituencyData) => {
       return {
@@ -47,13 +44,11 @@ export const getAllHcConstituenciesIds = async () => {
 };
 
 export const getHcConstituencyName = async (hcConctituencyId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/hc_constituencies/${hcConctituencyId}`,
-    {
-      method: 'GET',
-    },
   );
-  const hcConstituencyData = await res.json();
+  const hcConstituencyData = await res.data;
+
   if (Array.isArray(hcConstituencyData) && hcConstituencyData.every(isHcConstituency)) {
     const hcConstituencyName = hcConstituencyData[0].name;
     return hcConstituencyName;
