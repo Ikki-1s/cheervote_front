@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { HcMemberOfHcConstituency, HcMemberOfHcPr } from 'types/hcMember';
 import { PoliticalPartyOfPolitician } from 'types/politicalParty';
@@ -81,11 +81,15 @@ const isHcMemberOfHcPr = (arg: unknown): arg is HcMemberOfHcPr => {
 
 // 選挙区ごとの参議院議員
 export const getHcMembersOfHcConstituencyData = async (hcConstituencyId: string) => {
-  const res = await fetch(
+  const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/hc_members/hc_constituencies/${hcConstituencyId}`,
-    { method: 'GET' },
   );
-  const hcMembersOfHcConstituencyData = await res.json();
+  const hcMembersOfHcConstituencyData = await res.data;
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_API_URL}/hc_members/hc_constituencies/${hcConstituencyId}`,
+  //   { method: 'GET' },
+  // );
+  // const hcMembersOfHcConstituencyData = await res.json();
   if (
     Array.isArray(hcMembersOfHcConstituencyData) &&
     hcMembersOfHcConstituencyData.every(isHcMemberOfHcConstituency)
@@ -98,10 +102,12 @@ export const getHcMembersOfHcConstituencyData = async (hcConstituencyId: string)
 
 // 全国比例選出参議院議員
 export const getHcMembresOfHcPrData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hc_members/hc_pr`, {
-    method: 'GET',
-  });
-  const hcMembresOfHcPrData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hc_members/hc_pr`);
+  const hcMembresOfHcPrData = await res.data;
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hc_members/hc_pr`, {
+  //   method: 'GET',
+  // });
+  // const hcMembresOfHcPrData = await res.json();
   if (Array.isArray(hcMembresOfHcPrData) && hcMembresOfHcPrData.every(isHcMemberOfHcPr)) {
     return hcMembresOfHcPrData;
   } else {

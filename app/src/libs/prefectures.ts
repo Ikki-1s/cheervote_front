@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { Prefecture } from 'types/prefecture';
 
@@ -19,8 +19,8 @@ const isPrefecture = (arg: unknown): arg is Prefecture => {
 // };
 
 export const getAllPrefecturesData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/prefectures`, { method: 'GET' });
-  const allPrefecturesData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/prefectures`);
+  const allPrefecturesData = await res.data;
 
   if (Array.isArray(allPrefecturesData) && allPrefecturesData.every(isPrefecture)) {
     return allPrefecturesData;
@@ -31,8 +31,8 @@ export const getAllPrefecturesData = async () => {
 };
 
 export const getAllPrefecturesIds = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/prefectures`, { method: 'GET' });
-  const allPrefecturesData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/prefectures`);
+  const allPrefecturesData = await res.data;
 
   if (Array.isArray(allPrefecturesData) && allPrefecturesData.every(isPrefecture)) {
     return allPrefecturesData.map((prefectureData) => {
@@ -48,10 +48,8 @@ export const getAllPrefecturesIds = async () => {
 };
 
 export const getPrefectureName = async (prefectureId: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/prefectures/${prefectureId}`, {
-    method: 'GET',
-  });
-  const prefectureData = await res.json();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/prefectures/${prefectureId}`);
+  const prefectureData = await res.data;
 
   if (Array.isArray(prefectureData) && prefectureData.every(isPrefecture)) {
     const prefectureName = prefectureData[0].prefecture;
