@@ -1,9 +1,13 @@
 import axios from 'axios';
+import { GetServerSidePropsContext, NextPageContext } from 'next';
 import { parseCookies } from 'nookies';
 
 import { SignInParams, SignUpParams } from 'types';
+import { isCurrentUser } from './common/userDefinedTypeGuards';
 
-const clientSideBaseUrl = 'http://localhost:3000/api/v1/auth/';
+// const clientSideBaseUrl = 'http://localhost:3000/api/v1/auth/';
+const clientSideBaseUrl = `${process.env.NEXT_PUBLIC_CLIENT_SIDE_API_URL}/auth/`;
+const serverSideBaseUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/`;
 
 // サインアップ（新規ユーザー登録）
 export const signUp = (params: SignUpParams) => {
@@ -50,14 +54,32 @@ export const signOut = () => {
 };
 
 // 認証済みのユーザーを取得
-export const getCurrentUser = () => {
-  const cookie = parseCookies();
+export const getCurrentUser = async (context?: GetServerSidePropsContext) => {
+  const cookie = parseCookies(context);
   if (!cookie._access_token || !cookie._client || !cookie._uid) return;
-  return axios.get(clientSideBaseUrl + 'sessions', {
+
+  let reqUrl: string;
+  // クライアントサイド実行かサーバーサイド実行か判定
+  if (typeof window !== 'undefined') {
+    // クライアントサイドからアクセス時のURLをセット
+    reqUrl = clientSideBaseUrl;
+  } else {
+    // サーバーサイドからアクセス時のURLをセット
+    reqUrl = serverSideBaseUrl;
+  }
+
+  const res = await axios.get(reqUrl + 'sessions', {
     headers: {
       'access-token': cookie._access_token,
       client: cookie._client,
       uid: cookie._uid,
     },
   });
+  const currentUserData = await res.data;
+
+  if (isCurrentUser(currentUserData)) {
+    return currentUserData;
+  } else {
+    throw new Error();
+  }
 };

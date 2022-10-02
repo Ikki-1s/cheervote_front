@@ -26,12 +26,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   const handleGetCurrentUser = async () => {
     try {
-      const res = await getCurrentUser();
+      const currentUser = await getCurrentUser();
       // console.log(res);
 
-      if (res?.data.is_login === true) {
+      if (currentUser?.is_login === true) {
         setIsSignedIn(true);
-        setCurrentUser(res?.data.data);
+        setCurrentUser(currentUser?.data);
         // console.log(res?.data.data);
         // } else {
         //   console.log('No current user');

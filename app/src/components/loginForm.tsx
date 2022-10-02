@@ -29,7 +29,8 @@ export const LoginForm = () => {
 
       if (res.status === 200) {
         setClientSideCookie(res);
-        router.push('/');
+        // router.push('/');
+        router.back();
       } else {
         console.log(res);
         setAlertMessageOpen(true);

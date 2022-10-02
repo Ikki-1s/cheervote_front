@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Prefecture } from 'types/prefecture';
+import { Prefecture } from 'types';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (value: unknown): value is { [key: string]: unknown } => {

@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { destroyCookie, setCookie } from 'nookies';
+import { isPropertyAccessible } from './common/userDefinedTypeGuards';
 
 // Client-only Cookies
 export const setClientSideCookie = (res: AxiosResponse) => {
@@ -15,4 +16,26 @@ export const destroyClientSideCookie = () => {
   destroyCookie(null, '_access_token');
   destroyCookie(null, '_client');
   destroyCookie(null, '_uid');
+};
+
+// リクエストヘッダーに付加するアクセストークンのオブジェクトをCookieから作成
+export const setHeaderToken = (cookie?: { [key: string]: string }) => {
+  const token = {
+    'access-token': '',
+    client: '',
+    uid: '',
+  };
+
+  if (
+    isPropertyAccessible(cookie) &&
+    '_access_token' in cookie &&
+    '_client' in cookie &&
+    '_uid' in cookie
+  ) {
+    token['access-token'] = cookie._access_token;
+    token['client'] = cookie._client;
+    token['uid'] = cookie._uid;
+  }
+
+  return token;
 };

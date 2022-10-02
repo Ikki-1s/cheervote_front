@@ -5,8 +5,8 @@ import Layout from 'components/layout';
 import { getAllHrPrBlocksData } from 'libs/hrPrBlocks';
 import { getAllPrefecturesData } from 'libs/prefectures';
 
-import { HrPrBlock } from 'types/hrPrBlock';
-import { Prefecture } from 'types/prefecture';
+import { HrPrBlock } from 'types';
+import { Prefecture } from 'types';
 
 // const HrMember = ({ allPrefecturesData }: { allPrefecturesData: Prefecture[] }) => {
 const HrMember: NextPage<Props> = ({ allPrefecturesData, allHrPrBlocksData }) => {

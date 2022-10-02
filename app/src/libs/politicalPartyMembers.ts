@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-import {
-  HrMember,
-  HcMember,
-  PoliticalPartyHrMember,
-  PoliticalPartyHcMember,
-} from 'types/politicalPartyMember';
+import { HrMember, HcMember, PoliticalPartyHrMember, PoliticalPartyHcMember } from 'types';
 
 // ユーザー定義型ガード
 // const isPropertyAccessible = (data: unknown): data is { [key: string]: unknown } => {

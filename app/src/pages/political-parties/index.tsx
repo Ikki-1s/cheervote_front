@@ -4,7 +4,7 @@ import { GetStaticProps, NextPage } from 'next';
 import Layout from 'components/layout';
 import { getPoliticalPartiesHavingActiveMembersData } from 'libs/politicalParties';
 
-import { PoliticalPartyHavingActiveMember } from 'types/politicalParty';
+import { PoliticalPartyHavingActiveMember } from 'types';
 
 const PoliticalParty: NextPage<Props> = ({ politicalParties }) => {
   return (

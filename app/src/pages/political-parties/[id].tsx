@@ -11,7 +11,7 @@ import {
   getPoliticalPartyHrMembersData,
 } from 'libs/politicalPartyMembers';
 
-import { PoliticalPartyHrMember, PoliticalPartyHcMember } from '../../types/politicalPartyMember';
+import { PoliticalPartyHrMember, PoliticalPartyHcMember } from 'types';
 
 const PoliticalPartyMember: NextPage<Props> = ({
   politicalPartyName,
@@ -27,35 +27,39 @@ const PoliticalPartyMember: NextPage<Props> = ({
         衆議院議員
       </h2>
       <ul>
-        {politicalPartyHrMembers.map((member) => {
-          return (
-            <li key={member.id.toString()}>
-              {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-              {member.politician.last_name_kana} {member.politician.first_name_kana}）
-              {member.politician.hr_members[0].elected_system === 1
-                ? `／ ${member.politician.hr_members[0].hr_constituency!.prefecture.prefecture}${
-                    member.politician.hr_members[0].hr_constituency!.name
-                  }`
-                : `／ ${member.politician.hr_members[0].hr_pr_block!.block_name}ブロック`}
-            </li>
-          );
-        })}
+        {politicalPartyHrMembers.length
+          ? politicalPartyHrMembers.map((member) => {
+              return (
+                <li key={member.id.toString()}>
+                  {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
+                  {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                  {member.politician.hr_members[0].elected_system === 1
+                    ? `／ ${
+                        member.politician.hr_members[0].hr_constituency!.prefecture.prefecture
+                      }${member.politician.hr_members[0].hr_constituency!.name}`
+                    : `／ ${member.politician.hr_members[0].hr_pr_block!.block_name}ブロック`}
+                </li>
+              );
+            })
+          : 'この政党・会派所属の衆議院議員はいません'}
       </ul>
       <h2 className='flex justify-center m-2 text-4xl font-semibold tracking-wider leading-tight'>
         参議院議員
       </h2>
       <ul>
-        {politicalPartyHcMembers.map((member) => {
-          return (
-            <li key={member.id.toString()}>
-              {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-              {member.politician.last_name_kana} {member.politician.first_name_kana}）
-              {member.politician.hc_members[0].elected_system === 1
-                ? `／ ${member.politician.hc_members[0].hc_constituency!.name}`
-                : '／ 全国比例'}
-            </li>
-          );
-        })}
+        {politicalPartyHcMembers.length
+          ? politicalPartyHcMembers.map((member) => {
+              return (
+                <li key={member.id.toString()}>
+                  {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
+                  {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                  {member.politician.hc_members[0].elected_system === 1
+                    ? `／ ${member.politician.hc_members[0].hc_constituency!.name}`
+                    : '／ 全国比例'}
+                </li>
+              );
+            })
+          : 'この政党・会派所属の参議院議員はいません'}
       </ul>
     </Layout>
   );
