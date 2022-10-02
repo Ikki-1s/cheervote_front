@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { HcMemberOfHcConstituency, HcMemberOfHcPr } from 'types/hcMember';
-import { PoliticalPartyOfPolitician } from 'types/politicalParty';
+import { HcMemberOfHcConstituency, HcMemberOfHcPr } from 'types';
+import { PoliticalPartyOfPolitician } from 'types';
 
 // ユーザー定義型ガード
 // const isPropertyAccessible = (data: unknown): data is { [key: string]: unknown } => {

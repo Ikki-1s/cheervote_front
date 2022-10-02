@@ -5,7 +5,7 @@ import Layout from 'components/layout';
 import { getHcConstituencyName, getAllHcConstituenciesIds } from 'libs/hcConstituencies';
 import { getHcMembersOfHcConstituencyData } from 'libs/hcMembers';
 
-import { HcMemberOfHcConstituency } from 'types/hcMember';
+import { HcMemberOfHcConstituency } from 'types';
 
 const HcMemberOfHcConstituency: NextPage<Props> = ({
   hcConstituencyName,

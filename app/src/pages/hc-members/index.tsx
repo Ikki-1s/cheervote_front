@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Layout from 'components/layout';
 import { getAllHcConstituenciesData } from 'libs/hcConstituencies';
 
-import { HcConstituency } from 'types/hcConstituency';
+import { HcConstituency } from 'types';
 
 const HcMember: NextPage<Props> = ({ allHcConstituenciesData }) => {
   return (

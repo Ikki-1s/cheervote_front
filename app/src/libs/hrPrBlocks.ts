@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { HrPrBlock } from 'types/hrPrBlock';
+import { HrPrBlock } from 'types';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (arg: unknown): arg is Record<string, unknown> => {

@@ -2,38 +2,36 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
 import Layout from 'components/layout';
-import { getHrMembersOfHrPrBlockData } from 'libs/hrMembers';
-import { getAllHrPrBlocksIds, getHrPrBlockName } from 'libs/hrPrBlocks';
+import { getAllPoliticiansIds, getPoliticianWithAssociateData } from 'libs/politicians';
+import { PoliticianWithAssociateData } from 'types';
 
-import { HrMemberOfHrPrBlock } from 'types';
-
-const HrMemberOfHrPrBlock: NextPage<Props> = ({ hrPrBlockName, hrMembersOfHrPrBlockData }) => {
+const Politicians: NextPage<Props> = ({ politicianWithAssociateData }) => {
   return (
     <Layout>
       <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        {hrPrBlockName}ブロック
+        {`${politicianWithAssociateData[0].last_name_kanji} ${politicianWithAssociateData[0].first_name_kanji}`}
+        {/* 政治家個人ページ */}
       </h1>
-      <ul>
-        {hrMembersOfHrPrBlockData.map((hrMember) => {
+      {/* <ul>
+        {hrMembersOfPrefectureData.map((hrMember) => {
           return (
             <li key={hrMember.id.toString()}>
-              {`${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}
+              {`${hrMember.hr_constituency.name} : ${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}
               {hrMember.politician.political_party_members.map((politicalPartyMembers) => {
                 return `／ ${politicalPartyMembers.political_party.name_kanji}`;
               })}
             </li>
           );
         })}
-      </ul>
+      </ul> */}
     </Layout>
   );
 };
 
-export default HrMemberOfHrPrBlock;
+export default Politicians;
 
 type Props = {
-  hrPrBlockName: string;
-  hrMembersOfHrPrBlockData: HrMemberOfHrPrBlock[];
+  politicianWithAssociateData: PoliticianWithAssociateData[];
 };
 
 interface Params extends ParsedUrlQuery {
@@ -41,7 +39,7 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const paths = await getAllHrPrBlocksIds();
+  const paths = await getAllPoliticiansIds();
   return {
     paths,
     fallback: false,
@@ -49,12 +47,10 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 };
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const hrPrBlockName = await getHrPrBlockName(params!.id);
-  const hrMembersOfHrPrBlockData = await getHrMembersOfHrPrBlockData(params!.id);
+  const politicianWithAssociateData = await getPoliticianWithAssociateData(params!.id);
   return {
     props: {
-      hrPrBlockName,
-      hrMembersOfHrPrBlockData,
+      politicianWithAssociateData,
     },
   };
 };

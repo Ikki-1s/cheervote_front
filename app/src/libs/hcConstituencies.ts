@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { HcConstituency } from 'types/hcConstituency';
+import { HcConstituency } from 'types';
 
 // ユーザー定義型ガード
 const isPropertyAccessible = (arg: unknown): arg is { [key: string]: unknown } => {

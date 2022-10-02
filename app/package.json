@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "TZ='Asia/Tokyo' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src"
