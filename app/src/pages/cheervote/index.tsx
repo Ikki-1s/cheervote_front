@@ -154,7 +154,10 @@ const Cheervote: NextPage<Props> = (props: Props) => {
         )
       ) : (
         <p className='flex justify-center m-2 text-xl font-semibold tracking-wider leading-tight'>
-          対象の議員はいません。
+          {/* 対象の議員はいません。 */}
+          指定の政治家がいないか、現役議員ではないため、
+          <br />
+          CHEERVOTE（支持投票）することができません。
         </p>
       )}
     </Layout>

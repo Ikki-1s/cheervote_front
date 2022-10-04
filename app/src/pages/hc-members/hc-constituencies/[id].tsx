@@ -6,6 +6,7 @@ import { getHcConstituencyName, getAllHcConstituenciesIds } from 'libs/hcConstit
 import { getHcMembersOfHcConstituencyData } from 'libs/hcMembers';
 
 import { HcMemberOfHcConstituency } from 'types';
+import Link from 'next/link';
 
 const HcMemberOfHcConstituency: NextPage<Props> = ({
   hcConstituencyName,
@@ -20,7 +21,9 @@ const HcMemberOfHcConstituency: NextPage<Props> = ({
         {hcMembersOfHcConstituencyData.map((hcMember) => {
           return (
             <li key={hcMember.id.toString()}>
-              {`${hcMember.politician.last_name_kanji} ${hcMember.politician.first_name_kanji} （${hcMember.politician.last_name_kana} ${hcMember.politician.first_name_kana}）`}
+              <Link href={`/politicians/${hcMember.politician.id}`}>
+                <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>{`${hcMember.politician.last_name_kanji} ${hcMember.politician.first_name_kanji} （${hcMember.politician.last_name_kana} ${hcMember.politician.first_name_kana}）`}</a>
+              </Link>
               {hcMember.politician.political_party_members.map((politicalPartyMembers) => {
                 return `／ ${politicalPartyMembers.political_party.name_kanji}`;
               })}

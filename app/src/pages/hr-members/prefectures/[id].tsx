@@ -11,6 +11,7 @@ import { getHrMembersOfPrefectureData } from 'libs/hrMembers';
 import { getAllPrefecturesIds, getPrefectureName } from 'libs/prefectures';
 
 import { HrMemberOfPrefecture } from 'types';
+import Link from 'next/link';
 
 const HrMemberOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPrefectureData }) => {
   return (
@@ -22,7 +23,10 @@ const HrMemberOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPref
         {hrMembersOfPrefectureData.map((hrMember) => {
           return (
             <li key={hrMember.id.toString()}>
-              {`${hrMember.hr_constituency.name} : ${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}
+              {`${hrMember.hr_constituency.name} : `}
+              <Link href={`/politicians/${hrMember.politician.id}`}>
+                <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>{`${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}</a>
+              </Link>
               {hrMember.politician.political_party_members.map((politicalPartyMembers) => {
                 return `／ ${politicalPartyMembers.political_party.name_kanji}`;
               })}
