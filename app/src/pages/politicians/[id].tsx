@@ -4,14 +4,19 @@ import { ParsedUrlQuery } from 'querystring';
 import Layout from 'components/layout';
 import { getAllPoliticiansIds, getPoliticianWithAssociateData } from 'libs/politicians';
 import { PoliticianWithAssociateData } from 'types';
+import Link from 'next/link';
 
 const Politicians: NextPage<Props> = ({ politicianWithAssociateData }) => {
   return (
     <Layout>
       <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
         {`${politicianWithAssociateData[0].last_name_kanji} ${politicianWithAssociateData[0].first_name_kanji}`}
-        {/* 政治家個人ページ */}
       </h1>
+      <Link href={`/cheervote?politician=${politicianWithAssociateData[0].id}`}>
+        <a className='flex justify-center text-indigo-600 hover:text-indigo-600 hover:underline'>
+          CHEERVOTE（支持投票ページ）はこちら
+        </a>
+      </Link>
       {/* <ul>
         {hrMembersOfPrefectureData.map((hrMember) => {
           return (

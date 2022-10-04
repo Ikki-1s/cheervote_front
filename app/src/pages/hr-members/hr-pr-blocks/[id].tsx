@@ -6,6 +6,7 @@ import { getHrMembersOfHrPrBlockData } from 'libs/hrMembers';
 import { getAllHrPrBlocksIds, getHrPrBlockName } from 'libs/hrPrBlocks';
 
 import { HrMemberOfHrPrBlock } from 'types';
+import Link from 'next/link';
 
 const HrMemberOfHrPrBlock: NextPage<Props> = ({ hrPrBlockName, hrMembersOfHrPrBlockData }) => {
   return (
@@ -17,7 +18,9 @@ const HrMemberOfHrPrBlock: NextPage<Props> = ({ hrPrBlockName, hrMembersOfHrPrBl
         {hrMembersOfHrPrBlockData.map((hrMember) => {
           return (
             <li key={hrMember.id.toString()}>
-              {`${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}
+              <Link href={`/politicians/${hrMember.politician.id}`}>
+                <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>{`${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}</a>
+              </Link>
               {hrMember.politician.political_party_members.map((politicalPartyMembers) => {
                 return `／ ${politicalPartyMembers.political_party.name_kanji}`;
               })}

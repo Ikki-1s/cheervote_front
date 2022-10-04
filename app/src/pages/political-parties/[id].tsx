@@ -12,6 +12,7 @@ import {
 } from 'libs/politicalPartyMembers';
 
 import { PoliticalPartyHrMember, PoliticalPartyHcMember } from 'types';
+import Link from 'next/link';
 
 const PoliticalPartyMember: NextPage<Props> = ({
   politicalPartyName,
@@ -31,8 +32,12 @@ const PoliticalPartyMember: NextPage<Props> = ({
           ? politicalPartyHrMembers.map((member) => {
               return (
                 <li key={member.id.toString()}>
-                  {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-                  {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                  <Link href={`/politicians/${member.politician.id}`}>
+                    <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>
+                      {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
+                      {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                    </a>
+                  </Link>
                   {member.politician.hr_members[0].elected_system === 1
                     ? `／ ${
                         member.politician.hr_members[0].hr_constituency!.prefecture.prefecture
@@ -51,8 +56,12 @@ const PoliticalPartyMember: NextPage<Props> = ({
           ? politicalPartyHcMembers.map((member) => {
               return (
                 <li key={member.id.toString()}>
-                  {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-                  {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                  <Link href={`/politicians/${member.politician.id}`}>
+                    <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>
+                      {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
+                      {member.politician.last_name_kana} {member.politician.first_name_kana}）
+                    </a>
+                  </Link>
                   {member.politician.hc_members[0].elected_system === 1
                     ? `／ ${member.politician.hc_members[0].hc_constituency!.name}`
                     : '／ 全国比例'}
