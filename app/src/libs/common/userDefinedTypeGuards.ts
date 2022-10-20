@@ -1,5 +1,5 @@
 import {
-  CheervoteData,
+  CheervotePageData,
   CurrentUser,
   CvEvaluationValue,
   CvQuestion,
@@ -7,14 +7,19 @@ import {
   HcConstituency,
   HcElectionTime,
   HcMemberOrigin,
+  HcMemberWithAssociateData,
   HrConstituency,
+  HrConstituencyWithPref,
   HrElectionTime,
   HrMemberOrigin,
+  HrMemberWithAssociateData,
   HrPrBlock,
   PoliticalParty,
   PoliticalPartyMember,
   Politician,
+  PoliticianWithAssociateData,
   Prefecture,
+  ResultForPieChart,
   User,
 } from 'types';
 
@@ -28,8 +33,8 @@ export const isPropertyAccessible = (arg: unknown): arg is Record<string, unknow
   return arg != null;
 };
 
-// 支持投票ページ用
-export const isCheervoteData = (arg: unknown): arg is CheervoteData => {
+/// 支持投票ページ用 ///
+export const isCheervotePageData = (arg: unknown): arg is CheervotePageData => {
   if (!isPropertyAccessible(arg)) return false;
 
   // is_active_house_member = trueの場合
@@ -48,7 +53,7 @@ export const isCheervoteData = (arg: unknown): arg is CheervoteData => {
       ) {
         if (
           !isPrefecture(arg.hr_member.hr_constituency.prefecture) ||
-          !isHrConstituency(arg.hr_member.hr_constituency)
+          !isHrConstituencyWithPref(arg.hr_member.hr_constituency)
         )
           return false;
       }
@@ -132,7 +137,7 @@ export const isCheervoteData = (arg: unknown): arg is CheervoteData => {
   return typeof arg.is_login === 'boolean' && typeof arg.is_active_house_member === 'boolean';
 };
 
-// 認証済みユーザー
+/// 認証済みユーザー ///
 export const isCurrentUser = (arg: unknown): arg is CurrentUser => {
   if (!isPropertyAccessible(arg)) return false;
 
@@ -147,7 +152,7 @@ export const isCurrentUser = (arg: unknown): arg is CurrentUser => {
   );
 };
 
-// 支持投票評価値
+/// 支持投票評価値 ///
 export const isCvEvaluationValue = (arg: unknown): arg is CvEvaluationValue => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -158,7 +163,7 @@ export const isCvEvaluationValue = (arg: unknown): arg is CvEvaluationValue => {
   );
 };
 
-// 支持投票期間(衆議院・参議院)
+/// 支持投票期間(衆議院・参議院) ///
 export const isCvTerm = (arg: unknown): arg is CvTerm => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -168,7 +173,7 @@ export const isCvTerm = (arg: unknown): arg is CvTerm => {
   );
 };
 
-// 支持投票設問
+/// 支持投票設問 ///
 export const isCvQuestion = (arg: unknown): arg is CvQuestion => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -178,7 +183,7 @@ export const isCvQuestion = (arg: unknown): arg is CvQuestion => {
   );
 };
 
-// 支持投票設問 & 支持投票評価値
+/// 支持投票設問 & 支持投票評価値 ///
 export const isCvQuestionData = (
   arg: unknown,
 ): arg is { cv_question: CvQuestion; cv_evaluation_values: CvEvaluationValue[] } => {
@@ -197,7 +202,7 @@ export const isCvQuestionData = (
   return isCvQuestion(arg.cv_question);
 };
 
-// 参議院選挙区
+/// 参議院選挙区 ///
 export const isHcConstituency = (arg: unknown): arg is HcConstituency => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -208,7 +213,7 @@ export const isHcConstituency = (arg: unknown): arg is HcConstituency => {
   );
 };
 
-// 参議院選挙回
+/// 参議院選挙回 ///
 export const isHcElectionTime = (arg: unknown): arg is HcElectionTime => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -220,7 +225,7 @@ export const isHcElectionTime = (arg: unknown): arg is HcElectionTime => {
   );
 };
 
-// 参議院議員(テーブルに忠実)
+/// 参議院議員(テーブルに忠実) ///
 export const isHcMember = (arg: unknown): arg is HcMemberOrigin => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -236,7 +241,22 @@ export const isHcMember = (arg: unknown): arg is HcMemberOrigin => {
   );
 };
 
-// 衆議院小選挙区
+/// 参議院議員（選挙回・選挙区含む） ///
+export const isHcMemberWithAssociateData = (arg: unknown): arg is HcMemberWithAssociateData => {
+  if (!isPropertyAccessible(arg) || !isPropertyAccessible(arg.hc_election_time)) return false;
+
+  // 参議院選挙区がある場合のチェック
+  if (isPropertyAccessible(arg.hc_constituency) && !isHcConstituency(arg.hc_constituency))
+    return false;
+
+  // 参議院選挙回のチェック
+  if (!isHcElectionTime(arg.hc_election_time)) return false;
+
+  // 参議院議員のチェック
+  return isHcMember(arg);
+};
+
+/// 衆議院小選挙区 ///
 export const isHrConstituency = (arg: unknown): arg is HrConstituency => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -249,7 +269,18 @@ export const isHrConstituency = (arg: unknown): arg is HrConstituency => {
   );
 };
 
-// 衆議院選挙回
+/// 衆議院小選挙区（都道府県含む） ///
+export const isHrConstituencyWithPref = (arg: unknown): arg is HrConstituencyWithPref => {
+  if (!isPropertyAccessible(arg) || !isPropertyAccessible(arg.prefecture)) return false;
+
+  // 都道府県のチェック
+  if (!isPrefecture(arg.prefecture)) return false;
+
+  // 衆議院小選挙区部分のチェック
+  return isHrConstituency(arg);
+};
+
+/// 衆議院選挙回 ///
 export const isHrElectionTime = (arg: unknown): arg is HrElectionTime => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -262,7 +293,7 @@ export const isHrElectionTime = (arg: unknown): arg is HrElectionTime => {
   );
 };
 
-// 衆議院議員(テーブルに忠実)
+/// 衆議院議員(テーブルに忠実) ///
 export const isHrMember = (arg: unknown): arg is HrMemberOrigin => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -279,7 +310,7 @@ export const isHrMember = (arg: unknown): arg is HrMemberOrigin => {
   );
 };
 
-// 衆議院比例代表ブロック
+/// 衆議院比例代表ブロック ///
 export const isHrPrBlock = (arg: unknown): arg is HrPrBlock => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -289,7 +320,25 @@ export const isHrPrBlock = (arg: unknown): arg is HrPrBlock => {
   );
 };
 
-// 政党
+/// 衆議院議員（選挙回・小選挙区・比例ブロック含む） ///
+export const isHrMemberWithAssociateData = (arg: unknown): arg is HrMemberWithAssociateData => {
+  if (!isPropertyAccessible(arg) || !isPropertyAccessible(arg.hr_election_time)) return false;
+
+  // 衆議院小選挙区がある場合のチェック
+  if (isPropertyAccessible(arg.hr_constituency) && !isHrConstituencyWithPref(arg.hr_constituency))
+    return false;
+
+  // 衆議院比例代表ブロックがある場合のチェック
+  if (isPropertyAccessible(arg.hr_pr_block) && !isHrPrBlock(arg.hr_pr_block)) return false;
+
+  // 衆議院選挙回のチェック
+  if (!isHrElectionTime(arg.hr_election_time)) return false;
+
+  // 衆議院議員のチェック
+  return isHrMember(arg);
+};
+
+/// 政党 ///
 export const isPoliticalParty = (arg: unknown): arg is PoliticalParty => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -303,7 +352,7 @@ export const isPoliticalParty = (arg: unknown): arg is PoliticalParty => {
   );
 };
 
-// 政治家所属政党（政党含む）
+/// 政治家所属政党（政党含む） ///
 export const isPoliticalPartyMember = (arg: unknown): arg is PoliticalPartyMember => {
   if (!isPropertyAccessible(arg) || !isPropertyAccessible(arg.political_party)) return false;
 
@@ -318,7 +367,7 @@ export const isPoliticalPartyMember = (arg: unknown): arg is PoliticalPartyMembe
   );
 };
 
-// 政治家
+/// 政治家 ///
 export const isPolitician = (arg: unknown): arg is Politician => {
   if (!isPropertyAccessible(arg)) return false;
   return (
@@ -336,13 +385,57 @@ export const isPolitician = (arg: unknown): arg is Politician => {
   );
 };
 
-// 都道府県
+/// 政治家（関連テーブルデータ含む） ///
+export const isPoliticianWithAssociateData = (arg: unknown): arg is PoliticianWithAssociateData => {
+  if (!isPropertyAccessible(arg) || !isPropertyAccessible(arg.political_party_members))
+    return false;
+
+  // political_party_members部分のチェック
+  // 配列か否かを判定
+  if (!Array.isArray(arg.political_party_members)) return false;
+  // 全てPoliticalPartyMember型か否かを判定
+  if (arg.political_party_members.some((v) => !isPoliticalPartyMember(v))) return false;
+
+  // hr_members部分のデータがある場合のチェック
+  if (
+    Array.isArray(arg.hr_members) &&
+    arg.hr_members.length &&
+    arg.hr_members.some((v) => !isHrMemberWithAssociateData(v))
+  )
+    return false;
+
+  // hc_members部分のデータがある場合のチェック
+  if (
+    Array.isArray(arg.hc_members) &&
+    arg.hc_members.length &&
+    arg.hc_members.some((v) => !isHcMemberWithAssociateData(v))
+  )
+    return false;
+
+  // 政治家部分のチェック
+  return isPolitician(arg);
+};
+
+/// 都道府県 ///
 export const isPrefecture = (arg: unknown): arg is Prefecture => {
   if (!isPropertyAccessible(arg)) return false;
   return typeof arg.id === 'number' && typeof arg.prefecture === 'string';
 };
 
-// ユーザー
+// 支持投票結果の円グラフ表示用データ
+export const isResultForPieChart = (arg: unknown): arg is ResultForPieChart => {
+  if (!isPropertyAccessible(arg)) return false;
+  return (
+    Array.isArray(arg.labels) &&
+    arg.labels.every((v) => typeof v === 'string') &&
+    typeof arg.which_house === 'string' &&
+    Array.isArray(arg.data) &&
+    arg.data.every((v) => typeof v === 'number') &&
+    typeof arg.total === 'number'
+  );
+};
+
+/// ユーザー ///
 export const isUser = (arg: unknown): arg is User => {
   if (!isPropertyAccessible(arg)) return false;
   return (

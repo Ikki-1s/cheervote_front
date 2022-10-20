@@ -2,41 +2,41 @@ import { NextPage, GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 
 import Layout from 'components/layout';
-import { getCheervoteData } from 'libs/cheervotes';
+import { getCheervotePageData } from 'libs/cheervotes';
 import { getCvQuestionData } from 'libs/cvQuestions';
 
-import { CheervoteData, CheervotePostData, CvEvaluationValue, CvQuestion } from 'types';
+import { CheervotePageData, CheervotePostData, CvEvaluationValue, CvQuestion } from 'types';
 import { CheervotePostDataContext } from 'components/providers/CheervoteDataProvider';
 import { useState } from 'react';
 import { CheervoteQuestion } from 'components/cheervoteQuestion';
 
 const Cheervote: NextPage<Props> = (props: Props) => {
-  const { cheervoteData, cvQuestionData } = props;
+  const { cheervotePageData, cvQuestionData } = props;
   // console.log(cookie);
 
   const initialCheervotePostData = {
-    which_house: cheervoteData.is_active_house_member
-      ? cheervoteData.hc_member
+    which_house: cheervotePageData.is_active_house_member
+      ? cheervotePageData.hc_member
         ? 'hc'
-        : cheervoteData.hr_member
+        : cheervotePageData.hr_member
         ? 'hr'
         : null
       : null,
-    politician_id: cheervoteData.is_active_house_member
-      ? cheervoteData.hc_member
-        ? cheervoteData.hc_member.politician.id
-        : cheervoteData.hr_member
-        ? cheervoteData.hr_member.politician.id
+    politician_id: cheervotePageData.is_active_house_member
+      ? cheervotePageData.hc_member
+        ? cheervotePageData.hc_member.politician.id
+        : cheervotePageData.hr_member
+        ? cheervotePageData.hr_member.politician.id
         : null
       : null,
-    member_id: cheervoteData.is_active_house_member
-      ? cheervoteData.hc_member
-        ? cheervoteData.hc_member.id
-        : cheervoteData.hr_member
-        ? cheervoteData.hr_member.id
+    member_id: cheervotePageData.is_active_house_member
+      ? cheervotePageData.hc_member
+        ? cheervotePageData.hc_member.id
+        : cheervotePageData.hr_member
+        ? cheervotePageData.hr_member.id
         : null
       : null,
-    cv_term_id: cheervoteData.current_cv_term ? cheervoteData.current_cv_term.id : null,
+    cv_term_id: cheervotePageData.current_cv_term ? cheervotePageData.current_cv_term.id : null,
     // 暫定
     cv_question_id: 1,
     cv_evaluation_id: null,
@@ -53,69 +53,71 @@ const Cheervote: NextPage<Props> = (props: Props) => {
         CHEERVOTE（支持投票）
       </h1>
       {/* 現役参議院議員の場合 */}
-      {cheervoteData.is_active_house_member === true && cheervoteData.hc_member && (
+      {cheervotePageData.is_active_house_member === true && cheervotePageData.hc_member && (
         <>
           <h2 className='flex justify-center m-2 text-5xl font-semibold tracking-wider leading-tight'>
-            {`${cheervoteData.hc_member.politician.last_name_kanji} ${cheervoteData.hc_member.politician.first_name_kanji} 参議院議員`}
+            {`${cheervotePageData.hc_member.politician.last_name_kanji} ${cheervotePageData.hc_member.politician.first_name_kanji} 参議院議員`}
           </h2>
           <h3 className='flex justify-center m-2 text-4xl font-semibold tracking-wider leading-tight'>
             {/* 選挙区選出の場合 */}
-            {cheervoteData.hc_member.elected_system === 1 &&
-              `${cheervoteData.hc_member.hc_constituency?.name.replace(
+            {cheervotePageData.hc_member.elected_system === 1 &&
+              `${cheervotePageData.hc_member.hc_constituency?.name.replace(
                 /(都|府|県)/,
                 '',
               )}選挙区 選出`}
             {/* 全国比例選出の場合 */}
-            {cheervoteData.hc_member.elected_system === 2 && '全国比例 選出'}
+            {cheervotePageData.hc_member.elected_system === 2 && '全国比例 選出'}
           </h3>
         </>
       )}
       {/* 現役衆議院議員の場合 */}
-      {cheervoteData.is_active_house_member === true && cheervoteData.hr_member && (
+      {cheervotePageData.is_active_house_member === true && cheervotePageData.hr_member && (
         <>
           <h2 className='flex justify-center m-2 text-5xl font-semibold tracking-wider leading-tight'>
-            {`${cheervoteData.hr_member.politician.last_name_kanji} ${cheervoteData.hr_member.politician.first_name_kanji}  衆議院議員`}
+            {`${cheervotePageData.hr_member.politician.last_name_kanji} ${cheervotePageData.hr_member.politician.first_name_kanji}  衆議院議員`}
           </h2>
           <h3 className='flex justify-center m-2 text-4xl font-semibold tracking-wider leading-tight'>
             {/* 小選挙区選出の場合 */}
-            {cheervoteData.hr_member.elected_system === 1 &&
-              `${cheervoteData.hr_member.hr_constituency?.prefecture.prefecture.replace(
+            {cheervotePageData.hr_member.elected_system === 1 &&
+              `${cheervotePageData.hr_member.hr_constituency?.prefecture.prefecture.replace(
                 /(都|府|県)/,
                 '',
-              )}${cheervoteData.hr_member.hr_constituency?.name} 選出`}
+              )}${cheervotePageData.hr_member.hr_constituency?.name} 選出`}
             {/* 比例代表選出の場合 */}
-            {cheervoteData.hr_member.elected_system === 2 &&
-              `比例 ${cheervoteData.hr_member.hr_pr_block?.block_name}ブロック 選出`}
+            {cheervotePageData.hr_member.elected_system === 2 &&
+              `比例 ${cheervotePageData.hr_member.hr_pr_block?.block_name}ブロック 選出`}
           </h3>
           <p className='flex justify-center'>
-            {cheervoteData.hr_member.elected_system === 2 &&
-              `（小選挙区：${cheervoteData.hr_member.hr_constituency?.prefecture.prefecture.replace(
+            {cheervotePageData.hr_member.elected_system === 2 &&
+              cheervotePageData.hr_member.hr_constituency &&
+              `（小選挙区：${cheervotePageData.hr_member.hr_constituency?.prefecture.prefecture.replace(
                 /(都|府|県)/,
                 '',
-              )}${cheervoteData.hr_member.hr_constituency?.name} 重複立候補者）`}
+              )}${cheervotePageData.hr_member.hr_constituency?.name} 重複立候補者）`}
           </p>
         </>
       )}
       {/* マイ選挙区表示 */}
-      {cheervoteData.is_login === true && cheervoteData.is_my_constituency_member === true && (
-        <h3 className='flex justify-center text-3xl font-semibold text-blue-500 rounded-lg px-4 py-2 m-2'>
-          マイ選挙区
-        </h3>
-      )}
+      {cheervotePageData.is_login === true &&
+        cheervotePageData.is_my_constituency_member === true && (
+          <h3 className='flex justify-center text-3xl font-semibold text-blue-500 rounded-lg px-4 py-2 m-2'>
+            マイ選挙区
+          </h3>
+        )}
       {/* 支持投票受付期間 */}
-      {cheervoteData.current_cv_term && (
+      {cheervotePageData.current_cv_term && (
         <p className='flex justify-center'>
           <b>
-            {`投票受付期間： ${cheervoteData.current_cv_term.start_date} 〜 ${cheervoteData.current_cv_term.end_date}`}
+            {`投票受付期間： ${cheervotePageData.current_cv_term.start_date} 〜 ${cheervotePageData.current_cv_term.end_date}`}
           </b>
         </p>
       )}
       {/* 支持投票評価選択 */}
-      {cheervoteData.is_active_house_member ? (
-        cheervoteData.current_cv_term ? (
-          cheervoteData.is_login ? (
-            cheervoteData.is_my_constituency_member ? (
-              cheervoteData.is_login_user_possible_to_cv_on_term ? (
+      {cheervotePageData.is_active_house_member ? (
+        cheervotePageData.current_cv_term ? (
+          cheervotePageData.is_login ? (
+            cheervotePageData.is_my_constituency_member ? (
+              cheervotePageData.is_login_user_possible_to_cv_on_term ? (
                 <CheervotePostDataContext.Provider
                   value={{
                     cheervotePostData,
@@ -168,7 +170,7 @@ export default Cheervote;
 
 // type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 type Props = {
-  cheervoteData: CheervoteData;
+  cheervotePageData: CheervotePageData;
   cvQuestionData: {
     cv_question: CvQuestion;
     cv_evaluation_values: CvEvaluationValue[];
@@ -179,28 +181,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const { politician } = context.query;
   const cookie = parseCookies(context);
 
-  const cheervoteData = await getCheervoteData(politician as string, cookie);
+  const cheervotePageData = await getCheervotePageData(politician as string, cookie);
   const cvQuestionData = await getCvQuestionData('1');
 
   // 取得した支持投票期間の投票開始年月日時・投票終了年月日時を表示用に加工
-  if (cheervoteData.current_cv_term) {
+  if (cheervotePageData.current_cv_term) {
     const convert_start_date = new Date(
-      cheervoteData.current_cv_term.start_date,
+      cheervotePageData.current_cv_term.start_date,
     ).toLocaleDateString('ja-JP');
     // .replace(/(\d+)\/(\d+)\/(\d+)/g, '$3/$1/$2');
 
-    var tmp_end_date = new Date(cheervoteData.current_cv_term.end_date);
+    let tmp_end_date = new Date(cheervotePageData.current_cv_term.end_date);
     tmp_end_date.setDate(tmp_end_date.getDate() - 1);
     const convert_end_date = tmp_end_date.toLocaleDateString('ja-JP');
     // .replace(/(\d+)\/(\d+)\/(\d+)/g, '$3/$1/$2');
 
-    cheervoteData.current_cv_term.start_date = convert_start_date;
-    cheervoteData.current_cv_term.end_date = convert_end_date;
+    cheervotePageData.current_cv_term.start_date = convert_start_date;
+    cheervotePageData.current_cv_term.end_date = convert_end_date;
   }
 
   return {
     props: {
-      cheervoteData,
+      cheervotePageData,
       cvQuestionData,
     },
   };

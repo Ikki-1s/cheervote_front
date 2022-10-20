@@ -7,7 +7,7 @@ import { CheervotePostDataContext } from './providers/CheervoteDataProvider';
 
 type Inputs = CheervoteEvaluationParams;
 
-export const CheervoteForm = () => {
+export const CheervotePostForm = () => {
   const {
     register, // 入力または選択された要素を登録し検証
     handleSubmit, // 検証が成功するとフォーム内のデータを受け取る
