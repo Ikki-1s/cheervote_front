@@ -1,41 +1,60 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-// import { Chart, registerables } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, ChartData } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
+import { css } from '@emotion/react';
+import { color } from 'styles/theme';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
-// Chart.register(...registerables);
 
-export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; data: number[] }) => {
-  const chartData = {
+const divStyle = css`
+  /* max-width: max-content; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+`;
+
+type PieChartProps = {
+  labels: string[];
+  data: number[];
+  height?: number;
+  width?: number;
+  backgroundColor?: string[];
+  borderColor?: string[];
+  borderWidth?: number;
+  dataLabelFontSize?: number;
+};
+
+const default5Colors = [
+  color.pink.normal,
+  color.pieChart.liteGreen,
+  color.yellow,
+  color.blue.normal,
+  color.deepBluePurple,
+];
+
+export const PieChart = ({
+  labels,
+  data,
+  height = 500,
+  width = 600,
+  backgroundColor = default5Colors,
+  borderColor = default5Colors,
+  borderWidth = 1,
+  dataLabelFontSize = 22,
+}: PieChartProps) => {
+  const chartData: ChartData<'pie'> = {
     labels: labels,
     datasets: [
       {
         // label: '# of Votes',
         data: data,
-        backgroundColor: [
-          // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          // 'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          // 'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
-        borderWidth: 1,
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
       },
     ],
   };
 
-  const chartOption = {
+  const chartOptions: ChartOptions<'pie'> = {
     // サイズ変更の際に、元のキャンバスのアスペクト比(width/height)を維持
     maintainAspectRatio: false,
     layout: {
@@ -48,6 +67,7 @@ export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; da
     },
     plugins: {
       // legend: {
+      //  // 凡例を表示するか否か
       //   display: false,
       // },
 
@@ -55,13 +75,12 @@ export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; da
       datalabels: {
         align: 'end', // 'start','end', 'center'
         anchor: 'end', // 'start','end', 'center'
-        offset: -130,
-        color: '#fff',
-        // color: 'black',
+        offset: -135,
+        color: color.white,
         font: {
-          weight: 'bold',
-          size: 24,
           family: 'Noto Sans JP',
+          weight: 'bold',
+          size: dataLabelFontSize,
         },
         textAlign: 'center',
         textStrokeColor: '#6B7280',
@@ -79,24 +98,17 @@ export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; da
           if (value) {
             const percentage = ((value * 100) / sum).toFixed(1) + '%';
             return label + '\n' + percentage + '\n' + value + '票';
-            // return label + '\n' + percentage;
           } else {
-            return '';
+            return null;
           }
         },
       },
     },
   };
 
-  // console.log('CheervoteResultレンダリング');
-  // chartData.labels = labels;
-  // chartData.datasets[0].data = data;
-  // console.log(chartData);
-  // console.log(chartData.labels);
-  // console.log(chartData.datasets[0].data);
   return (
-    <div className='mx-auto max-w-min'>
-      <Pie data={chartData} height={500} width={600} options={chartOption} />
+    <div>
+      <Pie data={chartData} height={height} width={width} options={chartOptions} />
     </div>
   );
 };

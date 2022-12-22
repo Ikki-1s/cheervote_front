@@ -10,6 +10,7 @@ import { getPoliticianWithAssociateData } from 'libs/politicians';
 import { getActiveCvTermsOfPolitician, getResultForPieChart } from 'libs/cheervotes';
 import Layout from 'components/layout';
 import { CheervoteResultPieChart } from 'components/charts/cheervoteResult';
+import { PieChart } from 'components/atoms/Chart';
 
 type Inputs = { displayCvTerm: string };
 
@@ -71,7 +72,10 @@ const Politicians: NextPage<Props> = ({
         </div>
       )}
       {cvResult.total > 0 ? (
-        <CheervoteResultPieChart labels={cvResult.labels} data={cvResult.data} />
+        <>
+          <PieChart labels={cvResult.labels} data={cvResult.data} />
+          <CheervoteResultPieChart labels={cvResult.labels} data={cvResult.data} />
+        </>
       ) : (
         <div className='flex justify-center m-20 text-xl font-medium tracking-wider leading-tight'>
           この期間の投票はありません

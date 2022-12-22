@@ -86,6 +86,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <a>政党別国会議員</a>
             </Link>
           </li>
+          <li className='py-4 px-2 hover:font-bold list-none hover:text-blue-400 hover:border-b-4 hover:border-blue-400'>
+            <Link href='/sandbox'>
+              <a>sandbox</a>
+            </Link>
+          </li>
           {/* {isCookie ? ( */}
           {isSignedIn ? (
             <>
