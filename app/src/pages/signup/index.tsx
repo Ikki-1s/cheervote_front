@@ -1,16 +1,8 @@
-import Layout from 'components/layout';
-import { SignUpForm } from 'components/signUpForm';
 import { NextPage } from 'next';
+import Template from 'components/templates/signup/Signup';
 
-const SignUp: NextPage = () => {
-  return (
-    <Layout>
-      <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        ユーザー登録
-      </h1>
-      <SignUpForm />
-    </Layout>
-  );
+const Signup: NextPage = () => {
+  return <Template />;
 };
 
-export default SignUp;
+export default Signup;

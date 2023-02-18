@@ -1,93 +1,21 @@
 import { GetServerSideProps, NextPage } from 'next';
-import Link from 'next/link';
-import { useState } from 'react';
-// import { ParsedUrlQuery } from 'querystring';
+import Template from 'components/templates/politicians/Politician';
+import {
+  getPoliticianWithAssociateData,
+  HcMemberWithAssociateData,
+  HrMemberWithAssociateData,
+  PoliticianWithAssociateData,
+  valueof,
+} from 'domains';
+import { eliminateToHuKen } from 'utils';
 
-import { SubmitHandler, useForm } from 'react-hook-form';
+type Props = Parameters<typeof Template>[0];
 
-import { CvTerm, PoliticianWithAssociateData, ResultForPieChart } from 'types';
-import { getPoliticianWithAssociateData } from 'libs/politicians';
-import { getActiveCvTermsOfPolitician, getResultForPieChart } from 'libs/cheervotes';
-import Layout from 'components/layout';
-import { CheervoteResultPieChart } from 'components/charts/cheervoteResult';
-
-type Inputs = { displayCvTerm: string };
-
-const Politicians: NextPage<Props> = ({
-  politicianWithAssociateData,
-  resultForPieChart,
-  activeCvTermsOfPolitician,
-}) => {
-  const [cvResult, setCvResult] = useState<ResultForPieChart>(resultForPieChart);
-  const { register } = useForm<Inputs>();
-
-  const onChangeDisplayCvTerm = async (cvTermId: number) => {
-    try {
-      const res = await getResultForPieChart({
-        politicianId: politicianWithAssociateData[0].id.toString(),
-        cvQuestionId: 1,
-        myConstituencyFlg: 1,
-        cvTermId: cvTermId,
-      });
-      setCvResult(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  return (
-    <Layout>
-      <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        {`${politicianWithAssociateData[0].last_name_kanji} ${politicianWithAssociateData[0].first_name_kanji}`}
-      </h1>
-      <Link href={`/cheervote?politician=${politicianWithAssociateData[0].id}`}>
-        <a className='flex justify-center text-indigo-600 hover:text-indigo-600 hover:underline'>
-          CHEERVOTE（支持投票ページ）はこちら
-        </a>
-      </Link>
-      {activeCvTermsOfPolitician.length && (
-        <div className='flex justify-center'>
-          {/* <form onSubmit={handleSubmit(onSubmit)}> */}
-          <form>
-            <label>表示する投票期間：</label>
-            <div className='relative block'>
-              <select
-                className={`
-                  appearance-none block w-full p-[10px_30px_8px_10px]
-                  rounded-[4px] border border-solid border-gray-300
-                `}
-                {...register('displayCvTerm', {
-                  onChange: (e) => onChangeDisplayCvTerm(e.target.value as number),
-                })}
-              >
-                {activeCvTermsOfPolitician.map(({ id, start_date, end_date }) => (
-                  <option key={id} value={id.toString()}>
-                    {start_date} 〜 {end_date}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </form>
-        </div>
-      )}
-      {cvResult.total > 0 ? (
-        <CheervoteResultPieChart labels={cvResult.labels} data={cvResult.data} />
-      ) : (
-        <div className='flex justify-center m-20 text-xl font-medium tracking-wider leading-tight'>
-          この期間の投票はありません
-        </div>
-      )}
-    </Layout>
-  );
+const Politician: NextPage<Props> = ({ politicianBasicInfoTable }: Props) => {
+  return <Template politicianBasicInfoTable={politicianBasicInfoTable} />;
 };
 
-export default Politicians;
-
-type Props = {
-  politicianWithAssociateData: PoliticianWithAssociateData[];
-  resultForPieChart: ResultForPieChart;
-  activeCvTermsOfPolitician: CvTerm[];
-};
+export default Politician;
 
 type PathParams = {
   id: string;
@@ -101,86 +29,159 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const { id } = context.params as PathParams;
 
   const politicianWithAssociateData = await getPoliticianWithAssociateData(id);
-  const activeCvTermsOfPolitician = await getActiveCvTermsOfPolitician({
-    politicianId: id,
-  });
-  const resultForPieChart = await getResultForPieChart({
-    politicianId: id,
-    cvQuestionId: 1,
-    myConstituencyFlg: 1,
-  });
-
-  // 取得した支持投票期間の投票開始年月日時・投票終了年月日時を表示用に加工
-  // activeCvTermsOfPolitician.map((term, index) => {
-  activeCvTermsOfPolitician.map((term) => {
-    const tmpStartDate = new Date(term.start_date);
-    let tmpEndDate = new Date(term.end_date);
-
-    const currentDate = new Date();
-    let isInTermOfCv = '';
-
-    // 投票受付中の期間なら受付中の文言を頭に付ける
-    // if (index === 0 && tmpStartDate <= currentDate && currentDate <= tmpEndDate) {
-    if (tmpStartDate <= currentDate && currentDate < tmpEndDate) {
-      isInTermOfCv = '【受付中】';
-    }
-
-    // 投票開始年月日時
-    const convertStartDate = tmpStartDate.toLocaleDateString('ja-JP');
-    term.start_date = isInTermOfCv + convertStartDate;
-
-    // 投票終了年月日時
-    tmpEndDate.setDate(tmpEndDate.getDate() - 1);
-    const convertEndDate = tmpEndDate.toLocaleDateString('ja-JP');
-    term.end_date = convertEndDate;
-  });
+  const politicianBasicInfoTable = adjustPoliticianBasicInfoTable(politicianWithAssociateData[0]);
 
   return {
     props: {
-      politicianWithAssociateData,
-      resultForPieChart,
-      activeCvTermsOfPolitician,
+      politicianBasicInfoTable,
     },
   };
 };
 
-// export const getStaticPaths: GetStaticPaths<Params> = async () => {
-//   const paths = await getAllPoliticiansIds();
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// };
+// PoliticianBasicInfoTableのPropsの形に合わせてデータ整形
+const adjustPoliticianBasicInfoTable = (
+  politician: PoliticianWithAssociateData,
+): valueof<Pick<Props, 'politicianBasicInfoTable'>> | null => {
+  // 衆議院議員情報、参議院議員情報の内、最新の情報を抽出
+  const latestHrMemberData = politician.hr_members?.slice(-1)[0];
+  const latestHcMemberData = politician.hc_members?.slice(-1)[0];
+  const latestHouseData = determineWhichHouseMember(latestHrMemberData, latestHcMemberData);
 
-// export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-//   const politicianWithAssociateData = await getPoliticianWithAssociateData(params!.id);
-//   const resultForPieChart = await getResultForPieChart({
-//     politicianId: params!.id,
-//     cvQuestionId: 1,
-//     myConstituencyFlg: 1,
-//   });
-//   const activeCvTermsOfPolitician = await getActiveCvTermsOfPolitician({
-//     politicianId: params!.id,
-//   });
+  if (!latestHouseData) {
+    return null;
+  } else {
+    const activeElectionData = adjustActiveElectionData(latestHouseData);
 
-//   // 取得した支持投票期間の投票開始年月日時・投票終了年月日時を表示用に加工
-//   activeCvTermsOfPolitician.map((term) => {
-//     // 投票開始年月日時
-//     const convert_start_date = new Date(term.start_date).toLocaleDateString('ja-JP');
-//     term.start_date = convert_start_date;
+    return {
+      politician: {
+        lastNameKanji: politician.last_name_kanji,
+        ...(politician.first_name_kanji && { firstNameKanji: politician.first_name_kanji }),
+        lastNameKana: politician.last_name_kana,
+        ...(politician.first_name_kana && { firstNameKana: politician.first_name_kana }),
+        ...(politician.image && { imageSrc: politician.image }),
+        ...(politician.birthday && { birthday: politician.birthday }),
+        ...(politician.career && { career: politician.career }),
+        ...(politician.website && { website: politician.website }),
+        ...(politician.twitter && { twitter: politician.twitter }),
+        ...(politician.youtube && { youtube: politician.youtube }),
+        ...(politician.facebook && { facebook: politician.facebook }),
+        ...(politician.instagram && { instagram: politician.instagram }),
+        ...(politician.line && { line: politician.line }),
+      },
+      politicalParty: {
+        name: politician.political_party_members.slice(-1)[0].political_party.name_kanji,
+      },
+      activeElectionData: activeElectionData,
+    };
+  }
+};
 
-//     // 投票終了年月日時
-//     let tmp_end_date = new Date(term.end_date);
-//     tmp_end_date.setDate(tmp_end_date.getDate() - 1);
-//     const convert_end_date = tmp_end_date.toLocaleDateString('ja-JP');
-//     term.end_date = convert_end_date;
-//   });
+// 衆参どちらの現役議員かを判定し、現役である方のデータを返す。
+const determineWhichHouseMember = (
+  latestHrMemberData: HrMemberWithAssociateData | undefined,
+  latestHcMemberData: HcMemberWithAssociateData | undefined,
+) => {
+  let latestHouseData: {
+    whichHouse: 'hc' | 'hr';
+    houseMemberData: HrMemberWithAssociateData | HcMemberWithAssociateData;
+  } | null;
 
-//   return {
-//     props: {
-//       politicianWithAssociateData,
-//       resultForPieChart,
-//       activeCvTermsOfPolitician,
-//     },
-//   };
-// };
+  // 衆議院議員情報あり、参議院議員情報あり
+  if (latestHrMemberData && latestHcMemberData) {
+    // 選挙日比較
+    if (
+      new Date(latestHrMemberData!.hr_election_time.election_date) >
+      new Date(latestHcMemberData!.hc_election_time.election_date)
+    ) {
+      // 衆議院の方が最新の場合
+      return (latestHouseData = {
+        whichHouse: 'hr',
+        houseMemberData: latestHrMemberData,
+      });
+    } else {
+      // 参議院の方が最新の場合
+      return (latestHouseData = {
+        whichHouse: 'hc',
+        houseMemberData: latestHcMemberData,
+      });
+    }
+
+    // 衆議院議員情報あり、参議院議員情報なし
+  } else if (latestHrMemberData && !latestHcMemberData) {
+    // 衆議院議員.途中任期終了日チェック
+    if (!latestHrMemberData.mid_term_end_date) {
+      return (latestHouseData = {
+        whichHouse: 'hr',
+        houseMemberData: latestHrMemberData,
+      });
+    } else {
+      return (latestHouseData = null);
+    }
+    // 衆議院議員情報なし、参議院議員情報あり
+  } else if (!latestHrMemberData && latestHcMemberData) {
+    // 参議院議員.途中任期終了日チェック
+    if (!latestHcMemberData.mid_term_end_date) {
+      return (latestHouseData = {
+        whichHouse: 'hc',
+        houseMemberData: latestHcMemberData,
+      });
+    } else {
+      return (latestHouseData = null);
+    }
+    // 衆議院議員情報なし、参議院議員情報なし（不正パターン）
+  } else {
+    return (latestHouseData = null);
+  }
+};
+
+// 現役議員情報から選出情報を抽出・加工する。
+const adjustActiveElectionData = (
+  latestHouseData: Exclude<ReturnType<typeof determineWhichHouseMember>, null>,
+) => {
+  // 衆議院議員
+  if (latestHouseData.whichHouse === 'hr') {
+    // 衆議院小選挙区選出議員
+    if (latestHouseData.houseMemberData.elected_system === 1) {
+      return {
+        whichHouse: latestHouseData.whichHouse,
+        electedArea:
+          eliminateToHuKen(latestHouseData.houseMemberData.hr_constituency!.prefecture.prefecture) +
+          latestHouseData.houseMemberData.hr_constituency!.name,
+      };
+      // 衆議院比例代表ブロック選出議員
+    } else {
+      // 小選挙区重複立候補者
+      if (latestHouseData.houseMemberData.hr_constituency) {
+        return {
+          whichHouse: latestHouseData.whichHouse,
+          electedArea: latestHouseData.houseMemberData.hr_pr_block!.block_name + 'ブロック',
+          dualCandidacyArea:
+            eliminateToHuKen(
+              latestHouseData.houseMemberData.hr_constituency!.prefecture.prefecture,
+            ) + latestHouseData.houseMemberData.hr_constituency!.name,
+        };
+        // 比例単独候補
+      } else {
+        return {
+          whichHouse: latestHouseData.whichHouse,
+          electedArea: latestHouseData.houseMemberData.hr_pr_block!.block_name + 'ブロック',
+        };
+      }
+    }
+    // 参議院議員
+  } else {
+    // 選挙区選出議員
+    if (latestHouseData.houseMemberData.elected_system === 1) {
+      return {
+        whichHouse: latestHouseData.whichHouse,
+        electedArea: latestHouseData.houseMemberData.hc_constituency!.name,
+      };
+      // 全国比例選出議員
+    } else {
+      return {
+        whichHouse: latestHouseData.whichHouse,
+        electedArea: '全国比例',
+      };
+    }
+  }
+};

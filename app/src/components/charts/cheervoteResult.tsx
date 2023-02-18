@@ -57,13 +57,15 @@ export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; da
         anchor: 'end', // 'start','end', 'center'
         offset: -130,
         color: '#fff',
+        // color: 'black',
         font: {
           weight: 'bold',
           size: 24,
+          family: 'Noto Sans JP',
         },
         textAlign: 'center',
         textStrokeColor: '#6B7280',
-        textStrokeWidth: 1.5,
+        textStrokeWidth: 2,
         textShadowBlur: 3,
         textShadowColor: '#6B7280',
         formatter: (value: number, ctx: Context) => {

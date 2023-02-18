@@ -1,90 +1,26 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-
-import Layout from 'components/layout';
 import {
-  getPoliticalPartyName,
   getPoliticalPartiesHavingActiveMembersIds,
-} from 'libs/politicalParties';
-import {
-  getPoliticalPartyHcMembersData,
-  getPoliticalPartyHrMembersData,
-} from 'libs/politicalPartyMembers';
+  getPoliticalPartyHrMembers,
+  getPoliticalPartyHcMembers,
+  getPoliticalPartyName,
+  valueof,
+} from 'domains';
+import { eliminateToHuKen } from 'utils';
+import Template from 'components/templates/political-parties/PoliticalPartyMembers';
 
-import { PoliticalPartyHrMember, PoliticalPartyHcMember } from 'types';
-import Link from 'next/link';
-
-const PoliticalPartyMember: NextPage<Props> = ({
-  politicalPartyName,
-  politicalPartyHrMembers,
-  politicalPartyHcMembers,
-}) => {
-  return (
-    <Layout>
-      <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        {politicalPartyName}
-      </h1>
-      <h2 className='flex justify-center m-2 text-4xl font-semibold tracking-wider leading-tight'>
-        衆議院議員
-      </h2>
-      <ul>
-        {politicalPartyHrMembers.length
-          ? politicalPartyHrMembers.map((member) => {
-              return (
-                <li key={member.id.toString()}>
-                  <Link href={`/politicians/${member.politician.id}`}>
-                    <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>
-                      {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-                      {member.politician.last_name_kana} {member.politician.first_name_kana}）
-                    </a>
-                  </Link>
-                  {member.politician.hr_members[0].elected_system === 1
-                    ? `／ ${
-                        member.politician.hr_members[0].hr_constituency!.prefecture.prefecture
-                      }${member.politician.hr_members[0].hr_constituency!.name}`
-                    : `／ ${member.politician.hr_members[0].hr_pr_block!.block_name}ブロック`}
-                </li>
-              );
-            })
-          : 'この政党・会派所属の衆議院議員はいません'}
-      </ul>
-      <h2 className='flex justify-center m-2 text-4xl font-semibold tracking-wider leading-tight'>
-        参議院議員
-      </h2>
-      <ul>
-        {politicalPartyHcMembers.length
-          ? politicalPartyHcMembers.map((member) => {
-              return (
-                <li key={member.id.toString()}>
-                  <Link href={`/politicians/${member.politician.id}`}>
-                    <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>
-                      {member.politician.last_name_kanji} {member.politician.first_name_kanji}（
-                      {member.politician.last_name_kana} {member.politician.first_name_kana}）
-                    </a>
-                  </Link>
-                  {member.politician.hc_members[0].elected_system === 1
-                    ? `／ ${member.politician.hc_members[0].hc_constituency!.name}`
-                    : '／ 全国比例'}
-                </li>
-              );
-            })
-          : 'この政党・会派所属の参議院議員はいません'}
-      </ul>
-    </Layout>
-  );
-};
-
-export default PoliticalPartyMember;
-
-type Props = {
-  politicalPartyName: string;
-  politicalPartyHrMembers: PoliticalPartyHrMember[];
-  politicalPartyHcMembers: PoliticalPartyHcMember[];
-};
+type Props = Parameters<typeof Template>[0];
 
 interface Params extends ParsedUrlQuery {
   id: string;
 }
+
+const PoliticalPartyMember: NextPage<Props> = (props: Props) => {
+  return <Template {...props} />;
+};
+
+export default PoliticalPartyMember;
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const paths = await getPoliticalPartiesHavingActiveMembersIds();
@@ -96,13 +32,118 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const politicalPartyName = await getPoliticalPartyName(params!.id);
-  const politicalPartyHrMembers = await getPoliticalPartyHrMembersData(params!.id);
-  const politicalPartyHcMembers = await getPoliticalPartyHcMembersData(params!.id);
+  const hrMembers = await getPoliticalPartyHrMembers(params!.id);
+  const hcMembers = await getPoliticalPartyHcMembers(params!.id);
+
+  // 衆議院小選挙区選出議員
+  const hrMembersFilterConstituencies = hrMembers.filter((data) => {
+    return data.politician.hr_members[0].elected_system === 1;
+  });
+
+  const hrConstituenciesMembersTotal = hrMembersFilterConstituencies.length;
+
+  const hrConstituenciesMembers: valueof<Pick<Props, 'hrConstituenciesMembers'>> = {
+    total: hrConstituenciesMembersTotal,
+    politicalPartyMembersTable: hrMembersFilterConstituencies.map((data) => {
+      return {
+        electedArea:
+          eliminateToHuKen(data.politician.hr_members[0].hr_constituency!.prefecture.prefecture) +
+          data.politician.hr_members[0].hr_constituency!.name,
+        politicianListData: {
+          imageSrc: data.politician.image ? data.politician.image : '',
+          politicianId: data.politician.id,
+          lastNameKanji: data.politician.last_name_kanji,
+          firstNameKanji: data.politician.first_name_kanji ? data.politician.first_name_kanji : '',
+          lastNameKana: data.politician.last_name_kana,
+          firstNameKana: data.politician.first_name_kana ? data.politician.first_name_kana : '',
+          politicianUrl: `/politicians/${data.politician.id}`,
+        },
+      };
+    }),
+  };
+
+  // 衆議院比例ブロック選出議員
+  const hrMembersFilterPrBlocks = hrMembers.filter((data) => {
+    return data.politician.hr_members[0].elected_system === 2;
+  });
+
+  const hrPrBlocksMembersTotal = hrMembersFilterPrBlocks.length;
+
+  const hrPrBlocksMembers: valueof<Pick<Props, 'hrPrBlocksMembers'>> = {
+    total: hrPrBlocksMembersTotal,
+    politicalPartyMembersTable: hrMembersFilterPrBlocks.map((data) => {
+      return {
+        electedArea: data.politician.hr_members[0].hr_pr_block!.block_name + 'ブロック',
+        politicianListData: {
+          imageSrc: data.politician.image ? data.politician.image : '',
+          politicianId: data.politician.id,
+          lastNameKanji: data.politician.last_name_kanji,
+          firstNameKanji: data.politician.first_name_kanji ? data.politician.first_name_kanji : '',
+          lastNameKana: data.politician.last_name_kana,
+          firstNameKana: data.politician.first_name_kana ? data.politician.first_name_kana : '',
+          politicianUrl: `/politicians/${data.politician.id}`,
+        },
+      };
+    }),
+  };
+
+  // 参議院選挙区選出議員
+  const hcMembersFilterConstituencies = hcMembers.filter((data) => {
+    return data.politician.hc_members[0].elected_system === 1;
+  });
+
+  const hcConstituenciesMembersTotal = hcMembersFilterConstituencies.length;
+
+  const hcConstituenciesMembers: valueof<Pick<Props, 'hcConstituenciesMembers'>> = {
+    total: hcConstituenciesMembersTotal,
+    politicalPartyMembersTable: hcMembersFilterConstituencies.map((data) => {
+      return {
+        electedArea: data.politician.hc_members[0].hc_constituency!.name,
+        politicianListData: {
+          imageSrc: data.politician.image ? data.politician.image : '',
+          politicianId: data.politician.id,
+          lastNameKanji: data.politician.last_name_kanji,
+          firstNameKanji: data.politician.first_name_kanji ? data.politician.first_name_kanji : '',
+          lastNameKana: data.politician.last_name_kana,
+          firstNameKana: data.politician.first_name_kana ? data.politician.first_name_kana : '',
+          politicianUrl: `/politicians/${data.politician.id}`,
+        },
+      };
+    }),
+  };
+
+  // 参議院全国比例選出議員
+  const hcMembersFilterPr = hcMembers.filter((data) => {
+    return data.politician.hc_members[0].elected_system === 2;
+  });
+
+  const hcPrMembersTotal = hcMembersFilterPr.length;
+
+  const hcPrMembers: valueof<Pick<Props, 'hcPrMembers'>> = {
+    total: hcPrMembersTotal,
+    politicalPartyMembersTable: hcMembersFilterPr.map((data) => {
+      return {
+        electedArea: '全国比例選出',
+        politicianListData: {
+          imageSrc: data.politician.image ? data.politician.image : '',
+          politicianId: data.politician.id,
+          lastNameKanji: data.politician.last_name_kanji,
+          firstNameKanji: data.politician.first_name_kanji ? data.politician.first_name_kanji : '',
+          lastNameKana: data.politician.last_name_kana,
+          firstNameKana: data.politician.first_name_kana ? data.politician.first_name_kana : '',
+          politicianUrl: `/politicians/${data.politician.id}`,
+        },
+      };
+    }),
+  };
+
   return {
     props: {
       politicalPartyName,
-      politicalPartyHrMembers,
-      politicalPartyHcMembers,
+      hrConstituenciesMembers,
+      hrPrBlocksMembers,
+      hcConstituenciesMembers,
+      hcPrMembers,
     },
   };
 };
