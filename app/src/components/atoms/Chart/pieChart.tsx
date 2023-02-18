@@ -12,7 +12,7 @@ const divStyle = css`
   /* margin-right: auto; */
 `;
 
-type PieChartProps = {
+export type PieChartProps = {
   labels: string[];
   data: number[];
   height?: number;
@@ -66,10 +66,13 @@ export const PieChart = ({
       },
     },
     plugins: {
-      // legend: {
-      //  // 凡例を表示するか否か
-      //   display: false,
-      // },
+      legend: {
+        // 凡例を表示するか否か
+        // display: false,
+        labels: {
+          color: color.text.normal,
+        },
+      },
 
       // chartjs-plugin-datalabelsの設定値
       datalabels: {
@@ -106,9 +109,5 @@ export const PieChart = ({
     },
   };
 
-  return (
-    <div>
-      <Pie data={chartData} height={height} width={width} options={chartOptions} />
-    </div>
-  );
+  return <Pie data={chartData} height={height} width={width} options={chartOptions} />;
 };

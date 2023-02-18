@@ -7,7 +7,7 @@ type Props = {
 };
 
 const CheervoteLogo = (props: Props) => {
-  const { width = 200, height = 48.37 } = props;
+  const { width = 175, height = 42.32 } = props;
 
   return (
     <Link href='/' passHref>

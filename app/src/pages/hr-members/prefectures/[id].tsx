@@ -1,54 +1,29 @@
-import {
-  GetStaticProps,
-  GetStaticPaths,
-  NextPage,
-  InferGetStaticPropsType,
-  GetStaticPropsContext,
-} from 'next';
+import { GetStaticProps, GetStaticPaths, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import Layout from 'components/layout';
-import { getHrMembersOfPrefectureData } from 'libs/hrMembers';
-import { getAllPrefecturesIds, getPrefectureName } from 'libs/prefectures';
-
-import { HrMemberOfPrefecture } from 'types';
-import Link from 'next/link';
-
-const HrMemberOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPrefectureData }) => {
-  return (
-    <Layout>
-      <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        {prefectureName}
-      </h1>
-      <ul>
-        {hrMembersOfPrefectureData.map((hrMember) => {
-          return (
-            <li key={hrMember.id.toString()}>
-              {`${hrMember.hr_constituency.name} : `}
-              <Link href={`/politicians/${hrMember.politician.id}`}>
-                <a className='text-indigo-600 hover:text-indigo-600 hover:underline'>{`${hrMember.politician.last_name_kanji} ${hrMember.politician.first_name_kanji} （${hrMember.politician.last_name_kana} ${hrMember.politician.first_name_kana}）`}</a>
-              </Link>
-              {hrMember.politician.political_party_members.map((politicalPartyMembers) => {
-                return `／ ${politicalPartyMembers.political_party.name_kanji}`;
-              })}
-            </li>
-          );
-        })}
-      </ul>
-    </Layout>
-  );
-};
-
-export default HrMemberOfPrefecture;
-
-type Props = {
-  prefectureName: string;
-  hrMembersOfPrefectureData: HrMemberOfPrefecture[];
-};
-// type Props = InferGetStaticPropsType<typeof getStaticProps>
+import {
+  getAllPrefecturesIds,
+  getPrefectureName,
+  getHrMembersOfPrefecture,
+  valueof,
+} from 'domains';
+import Template from 'components/templates/hr-members/prefectures/HrMembersOfPrefecture';
 
 interface Params extends ParsedUrlQuery {
   id: string;
 }
+
+type Props = Parameters<typeof Template>[0];
+
+const HrMembersOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPrefectureTable }) => {
+  return (
+    <Template
+      prefectureName={prefectureName}
+      hrMembersOfPrefectureTable={hrMembersOfPrefectureTable}
+    />
+  );
+};
+
+export default HrMembersOfPrefecture;
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const paths = await getAllPrefecturesIds();
@@ -60,21 +35,36 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const prefectureName = await getPrefectureName(params!.id);
-  const hrMembersOfPrefectureData = await getHrMembersOfPrefectureData(params!.id);
+  const hrMembersOfPrefecture = await getHrMembersOfPrefecture(params!.id);
+
+  const hrMembersOfPrefectureTable: valueof<Pick<Props, 'hrMembersOfPrefectureTable'>> =
+    hrMembersOfPrefecture.map((data) => {
+      return {
+        hrConstituency: {
+          id: data.hr_constituency.id,
+          name: data.hr_constituency.name,
+        },
+        politicianListData: {
+          imageSrc: data.politician.image ? data.politician.image : '',
+          politicianId: data.politician.id,
+          lastNameKanji: data.politician.last_name_kanji,
+          firstNameKanji: data.politician.first_name_kanji ? data.politician.first_name_kanji : '',
+          lastNameKana: data.politician.last_name_kana,
+          firstNameKana: data.politician.first_name_kana ? data.politician.first_name_kana : '',
+          politicianUrl: `/politicians/${data.politician.id}`,
+          politicalParty:
+            data.politician.political_party_members.slice(-1)[0].political_party.name_kanji,
+          politicalPartyUrl: `/political-parties/${
+            data.politician.political_party_members.slice(-1)[0].political_party.id
+          }`,
+        },
+      };
+    });
+
   return {
     props: {
       prefectureName,
-      hrMembersOfPrefectureData,
+      hrMembersOfPrefectureTable,
     },
   };
 };
-// export const getStaticProps = async (context: GetStaticPropsContext<{ id: string }>) => {
-//   const prefectureName = await getPrefectureName(context.params.id);
-//   const hrMembersOfPrefectureData = await getHrMembersOfPrefectureData(context.params.id);
-//   return {
-//     props: {
-//       prefectureName,
-//       hrMembersOfPrefectureData,
-//     },
-//   };
-// };

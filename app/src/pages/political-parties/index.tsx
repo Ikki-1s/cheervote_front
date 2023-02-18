@@ -1,41 +1,31 @@
-import Link from 'next/link';
 import { GetStaticProps, NextPage } from 'next';
+import Template from 'components/templates/political-parties/PoliticalParties';
+import { getPoliticalPartiesHavingActiveMembers, valueof } from 'domains';
 
-import Layout from 'components/layout';
-import { getPoliticalPartiesHavingActiveMembersData } from 'libs/politicalParties';
+type Props = Parameters<typeof Template>[0];
 
-import { PoliticalPartyHavingActiveMember } from 'types';
-
-const PoliticalParty: NextPage<Props> = ({ politicalParties }) => {
-  return (
-    <Layout>
-      <h1 className='flex justify-center m-2 text-6xl font-semibold tracking-wider leading-tight'>
-        政党別国会議員
-      </h1>
-      <ul>
-        {politicalParties.map((politicalParty) => (
-          <li key={politicalParty.id.toString()}>
-            <Link href={`/political-parties/${politicalParty.id}`}>
-              <a>{politicalParty.name}</a>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </Layout>
-  );
+const PoliticalParties: NextPage<Props> = ({ politicalPartiesTable }) => {
+  return <Template politicalPartiesTable={politicalPartiesTable} />;
 };
 
-export default PoliticalParty;
-
-type Props = {
-  politicalParties: PoliticalPartyHavingActiveMember[];
-};
+export default PoliticalParties;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const politicalParties = await getPoliticalPartiesHavingActiveMembersData();
+  const politicalPartiesHavingActiveMembers = await getPoliticalPartiesHavingActiveMembers();
+
+  const politicalPartiesTable: valueof<Pick<Props, 'politicalPartiesTable'>> =
+    politicalPartiesHavingActiveMembers.map((data) => {
+      return {
+        politicalPartyId: data.id,
+        politicalPartyName: data.name_kanji,
+        numberOfHrMembers: data.hr_count,
+        numberOfHcMembers: data.hc_count,
+        url: `/political-parties/${data.id}`,
+      };
+    });
   return {
     props: {
-      politicalParties,
+      politicalPartiesTable,
     },
   };
 };

@@ -31,10 +31,15 @@ const baseStyle = css`
 
   h1 {
     ${typography.heading1};
+    margin: 10px 0 0 0;
   }
 
   h2 {
     ${typography.heading2};
+    margin: 30px 0 0 0;
+    &:first-of-type {
+      margin: 10px 0 0 0;
+    }
   }
 
   h3 {

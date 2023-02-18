@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { color, typography } from 'styles/theme';
 
-const styles = {
+const menuStyles = {
   closedMenu: css`
     display: flex;
-    /* justify-content: center; */
     align-items: center;
     padding: 14px 20px;
     gap: 20px;
-    width: 1014px;
+    width: 100%;
+    max-width: 1014px;
     height: 54px;
     background: ${color.blue.normal};
     border-radius: 6px;
@@ -27,36 +27,78 @@ const styles = {
       -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
       transform: rotate(45deg);
-      transition: transform 0.3s; /* transformに動きをつける */
+      transition: transform 0.2s; /* transformに動きをつける */
     }
   `,
   openedMenu: css`
     border-radius: 6px 6px 0px 0px;
     &:before {
-      transform: rotate(-135deg) translateX(-40%) translateY(-40%);
-      /* transform: rotate(-135deg); */
+      transform: rotate(225deg) translateX(-40%) translateY(-40%);
+      /* transform: rotate(-135deg) translateX(-40%) translateY(-40%); */
     }
   `,
 };
 
+const childrenWrap = css`
+  width: 100%;
+  max-width: 1014px;
+
+  transition: height 0.2s linear, opacity 0.2s ease-in;
+  overflow: hidden;
+`;
+
 type Props = {
-  children: string;
+  title: string;
+  defaultIsOpened: boolean;
+  children?: ReactNode;
 };
 
-const AccordionMenu = ({ children }: Props) => {
-  const [opened, setOpened] = useState(false);
+const AccordionMenu = ({ title, defaultIsOpened, children }: Props) => {
+  const [isOpened, setIsOpened] = useState<boolean>(defaultIsOpened);
+  const childrenRef = useRef<HTMLDivElement>(null);
+  const [showChildren, setShowChildren] = useState<boolean>(defaultIsOpened);
+  const [childrenHeight, setChildrenHeight] = useState<number>(0);
+
+  const updateSize = () => {
+    if (childrenRef.current) {
+      const height = childrenRef.current?.clientHeight;
+      setChildrenHeight(height);
+    }
+  };
+
+  useEffect(() => {
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   const handleClick = () => {
-    setOpened(!opened);
+    if (childrenRef.current) {
+      setShowChildren(!showChildren);
+    }
+    setIsOpened(!isOpened);
   };
 
   return (
-    <div
-      onClick={handleClick}
-      css={opened ? [styles.closedMenu, styles.openedMenu] : styles.closedMenu}
-    >
-      {children}
-    </div>
+    <>
+      <button
+        onClick={handleClick}
+        css={isOpened ? [menuStyles.closedMenu, menuStyles.openedMenu] : menuStyles.closedMenu}
+      >
+        {title}
+      </button>
+      <div
+        css={[
+          childrenWrap,
+          css`
+            height: ${showChildren ? `${childrenHeight}px` : '0px'};
+            opacity: ${showChildren ? 1 : 0};
+          `,
+        ]}
+      >
+        <div ref={childrenRef}>{children}</div>
+      </div>
+    </>
   );
 };
 

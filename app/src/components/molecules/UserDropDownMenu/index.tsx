@@ -1,13 +1,17 @@
 import { css } from '@emotion/react';
 import UserIcon from 'components/atoms/UserIcon';
 import { color } from 'styles/theme';
+import { AdjustStringLength } from 'utils/adjustStringLength';
 
 const styles = {
-  a: css`
+  dropDownButton: css`
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 4px 10px;
+    background: ${color.background.normal};
+    border-radius: 6px;
+    color: ${color.text.normal};
     &:hover {
       background: ${color.blue.hover};
       border-radius: 6px;
@@ -30,24 +34,18 @@ const styles = {
 };
 
 type Props = {
-  children: string;
+  userName: string;
   url?: string;
   displayLength?: number;
 };
 
-const UserDropDownMenu = ({ children, url = '#', displayLength = 15 }: Props) => {
-  let userName;
-  if (children.length > displayLength) {
-    userName = children.substring(0, displayLength) + '...';
-  } else {
-    userName = children;
-  }
-
+///////// 廃止(ecosystemsに変更予定) /////////////////
+const UserDropDownMenu = ({ userName, url = '#', displayLength = 15 }: Props) => {
   return (
-    <a href={url} css={styles.a}>
-      <UserIcon />
-      <span css={styles.span}>{userName}</span>
-    </a>
+    <button css={styles.dropDownButton}>
+      <UserIcon iconSrc='/UserImage.png' />
+      <span css={styles.span}>{AdjustStringLength(userName, displayLength, '...')}</span>
+    </button>
   );
 };
 

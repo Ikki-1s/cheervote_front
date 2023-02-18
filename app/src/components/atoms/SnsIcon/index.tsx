@@ -1,7 +1,13 @@
 import Image from 'next/image';
+import { css } from '@emotion/react';
 import Twitter from '/public/sns/Twitter_social_icons_rounded _square_blue.svg';
 import Home from '/public/sns/homepage.svg';
 import HomeDisabled from '/public/sns/homepage_disabled.svg';
+
+const style = css`
+  display: flex;
+  align-items: center;
+`;
 
 type Props = {
   snsType: 'home' | 'homeDisabled' | 'twitter' | 'youtube' | 'facebook' | 'instagram' | 'line';
@@ -62,7 +68,7 @@ const SwitchType = (props: Props) => {
 const SnsIcon = (props: Props) => {
   const snsComponent = SwitchType(props);
   return (
-    <a href={props.url} target='_blank'>
+    <a href={props.url} target='_blank' css={style}>
       {snsComponent}
     </a>
   );
