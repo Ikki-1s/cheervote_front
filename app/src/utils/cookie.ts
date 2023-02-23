@@ -3,6 +3,7 @@ import { isPropertyAccessible } from 'domains';
 import { destroyCookie, setCookie } from 'nookies';
 
 // Client-only Cookies
+// signup()のレスポンスをそのまま引数にセットする
 export const setClientSideCookie = (res: AxiosResponse) => {
   // 秒で有効期間を設定 [何日 ✕ 1日(24時間) ✕ 1時間(60分) ✕ 1分(60秒)]
   const setCookieOptions = { maxAge: 14 * 24 * 60 * 60, path: '/' };
