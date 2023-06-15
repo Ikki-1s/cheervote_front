@@ -1,4 +1,4 @@
-import { signOut } from 'domains';
+import { signout } from 'domains';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
@@ -45,7 +45,7 @@ const Layout2 = ({ children }: { children: ReactNode }) => {
 
   const handleSignOut = async () => {
     try {
-      const res = await signOut();
+      const res = await signout();
 
       // ステータスがsuccessでもsuccessでなくてもどちらもログアウトでやるべき処理は変わらないのでは？
       if (res.data.success === true) {
