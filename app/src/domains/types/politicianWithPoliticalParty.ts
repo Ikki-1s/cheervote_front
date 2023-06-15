@@ -6,3 +6,4 @@
 // export type PoliticianWithPoliticalParty = Politician & {
 //   political_party_members: PoliticalPartyOfPolitician[];
 // };
+export {};
