@@ -1,4 +1,4 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
 // import { Chart, registerables } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
@@ -35,7 +35,7 @@ export const CheervoteResultPieChart = ({ labels, data }: { labels: string[]; da
     ],
   };
 
-  const chartOption = {
+  const chartOption: ChartOptions<'pie'> = {
     // サイズ変更の際に、元のキャンバスのアスペクト比(width/height)を維持
     maintainAspectRatio: false,
     layout: {
