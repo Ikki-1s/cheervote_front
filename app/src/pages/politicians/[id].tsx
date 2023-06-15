@@ -76,16 +76,22 @@ const adjustPoliticianBasicInfoTable = (
   }
 };
 
+type LatestHouseData =
+  | {
+      readonly whichHouse: 'hr';
+      houseMemberData: HrMemberWithAssociateData;
+    }
+  | {
+      readonly whichHouse: 'hc';
+      houseMemberData: HcMemberWithAssociateData;
+    }
+  | null;
+
 // 衆参どちらの現役議員かを判定し、現役である方のデータを返す。
 const determineWhichHouseMember = (
   latestHrMemberData: HrMemberWithAssociateData | undefined,
   latestHcMemberData: HcMemberWithAssociateData | undefined,
-) => {
-  let latestHouseData: {
-    whichHouse: 'hc' | 'hr';
-    houseMemberData: HrMemberWithAssociateData | HcMemberWithAssociateData;
-  } | null;
-
+): LatestHouseData => {
   // 衆議院議員情報あり、参議院議員情報あり
   if (latestHrMemberData && latestHcMemberData) {
     // 選挙日比較
@@ -94,43 +100,43 @@ const determineWhichHouseMember = (
       new Date(latestHcMemberData!.hc_election_time.election_date)
     ) {
       // 衆議院の方が最新の場合
-      return (latestHouseData = {
+      return {
         whichHouse: 'hr',
         houseMemberData: latestHrMemberData,
-      });
+      };
     } else {
       // 参議院の方が最新の場合
-      return (latestHouseData = {
+      return {
         whichHouse: 'hc',
         houseMemberData: latestHcMemberData,
-      });
+      };
     }
 
     // 衆議院議員情報あり、参議院議員情報なし
   } else if (latestHrMemberData && !latestHcMemberData) {
     // 衆議院議員.途中任期終了日チェック
     if (!latestHrMemberData.mid_term_end_date) {
-      return (latestHouseData = {
+      return {
         whichHouse: 'hr',
         houseMemberData: latestHrMemberData,
-      });
+      };
     } else {
-      return (latestHouseData = null);
+      return null;
     }
     // 衆議院議員情報なし、参議院議員情報あり
   } else if (!latestHrMemberData && latestHcMemberData) {
     // 参議院議員.途中任期終了日チェック
     if (!latestHcMemberData.mid_term_end_date) {
-      return (latestHouseData = {
+      return {
         whichHouse: 'hc',
         houseMemberData: latestHcMemberData,
-      });
+      };
     } else {
-      return (latestHouseData = null);
+      return null;
     }
     // 衆議院議員情報なし、参議院議員情報なし（不正パターン）
   } else {
-    return (latestHouseData = null);
+    return null;
   }
 };
 
