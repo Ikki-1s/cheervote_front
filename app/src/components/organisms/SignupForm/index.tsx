@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { fontWeight, typography } from 'styles/theme';
@@ -41,6 +40,25 @@ const styles = {
   `,
 };
 
+const signupSuccessStyles = {
+  wrap: css`
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+  `,
+  title: css`
+    ${typography.heading3}
+    ${fontWeight.bold}
+  `,
+  body: css`
+    line-height: 1.7em;
+  `,
+};
+
 type Inputs = SignupParams;
 
 type SelectOptionListProps = Parameters<typeof SelectBoxRHF>[0]['selectOption']['optionList'];
@@ -53,6 +71,7 @@ const SignupForm = ({ prefectures }: Props) => {
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false);
   const [hrConstituencyList, setHrConstituencyList] = useState<SelectOptionListProps>();
   const [hcConstituencyList, setHcConstituencyList] = useState<SelectOptionListProps>();
+  const [signupSuccess, setSignupSuccess] = useState<boolean>(false);
 
   const {
     register, // 入力または選択された要素を登録し検証
@@ -67,8 +86,6 @@ const SignupForm = ({ prefectures }: Props) => {
     shouldFocusError: true,
     mode: 'onBlur',
   });
-
-  const router = useRouter();
 
   // 都道府県セレクトボックス用リスト
   const prefList = {
@@ -112,11 +129,7 @@ const SignupForm = ({ prefectures }: Props) => {
       const res = await signup(data);
 
       if (res.status === 200) {
-        // アカウント作成と同時にログインさせてしまう
-        // 本来であればメール確認などを挟むべき
-
-        setClientSideCookie(res);
-        router.push('/');
+        setSignupSuccess(true);
       } else {
         console.log(res);
         setAlertMessageOpen(true);
@@ -127,7 +140,18 @@ const SignupForm = ({ prefectures }: Props) => {
     }
   };
 
-  return (
+  return signupSuccess ? (
+    <div css={signupSuccessStyles.wrap}>
+      <div css={signupSuccessStyles.title}>確認メールを送信しました</div>
+      <div css={signupSuccessStyles.body}>
+        <p>ご登録いただいたメールアドレス宛に受信確認用のメールを送信しました。</p>
+        <p>
+          届いたメールをご確認いただき、「アカウント確認」リンクをクリックして、ユーザー登録を完了してください。
+        </p>
+        <p>※「アカウント確認」リンクのクリックの有効期間は24時間以内です。</p>
+      </div>
+    </div>
+  ) : (
     <div css={styles.wrap}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate css={styles.form}>
         {alertMessageOpen && (

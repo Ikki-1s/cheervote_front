@@ -27,6 +27,7 @@ export const signup = (params: SignupParams) => {
     hr_constituency_id: hrConstituency,
     hc_constituency_id: hcConstituency,
     prefecture_id: prefecture,
+    confirm_success_url: process.env.NEXT_PUBLIC_CL_LOGIN_PAGE_URL,
   });
 };
 
