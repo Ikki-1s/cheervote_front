@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { CheervotePostForm } from './cheervotePostForm';
-import { CheervotePostDataContext } from './providers/CheervoteDataProvider';
+import { CheervotePostDataContext } from 'providers/CheervoteDataProvider';
 
 // 暫定対応。今後複数設問扱えるよう対応する
 export const CheervoteQuestion = () => {

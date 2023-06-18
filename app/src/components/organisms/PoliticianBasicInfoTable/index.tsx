@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { color, fontWeight, typography } from 'styles/theme';
 import { ageCalculation } from 'utils/ageCaluculation';
 import SnsIcon from 'components/atoms/SnsIcon';
+import PoliticianNoImageIcon from 'assets/PoliticianNoImageIcon.svg';
 
 const styles = {
   wrap: css`
@@ -162,13 +163,17 @@ const PoliticianBasicInfoTable = ({
         </div>
       </div>
       <div css={styles.detailInfoWrap}>
-        <Image
-          src={politician.image ? politician.image : '/UserImage.png'}
-          alt='議員の顔写真'
-          layout='fixed'
-          width={styles.image.width}
-          height={styles.image.height}
-        />
+        {politician.image ? (
+          <Image
+            src={politician.image}
+            alt='議員の顔写真'
+            layout='fixed'
+            width={styles.image.width}
+            height={styles.image.height}
+          />
+        ) : (
+          <PoliticianNoImageIcon width={styles.image.width} height={styles.image.height} />
+        )}
         <div css={styles.detailTableWrap}>
           <div css={styles.rowWrap}>
             <div css={styles.rowTitle}>所属政党</div>

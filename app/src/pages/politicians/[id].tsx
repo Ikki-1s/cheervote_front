@@ -8,11 +8,21 @@ import {
   valueof,
 } from 'domains';
 import { eliminateToHuKen } from 'utils';
+import Meta from 'components/organisms/Meta';
 
 type Props = Parameters<typeof Template>[0];
 
 const Politician: NextPage<Props> = ({ politicianBasicInfoTable }: Props) => {
-  return <Template politicianBasicInfoTable={politicianBasicInfoTable} />;
+  const politicianName = `${politicianBasicInfoTable?.politician.lastNameKanji}${
+    politicianBasicInfoTable?.politician.firstNameKanji &&
+    `${politicianBasicInfoTable?.politician.firstNameKanji}`
+  }`;
+  return (
+    <>
+      <Meta pageTitle={politicianName} pageDesc={`${politicianName}議員の個人ページです。`} />
+      <Template politicianBasicInfoTable={politicianBasicInfoTable} />
+    </>
+  );
 };
 
 export default Politician;
