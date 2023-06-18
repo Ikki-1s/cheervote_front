@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { css } from '@emotion/react';
 import { fontWeight, typography } from 'styles/theme';
-import PoliticianNoImageIcon from '/public/PoliticianNoImageIcon.svg';
+import PoliticianNoImageIcon from 'assets/PoliticianNoImageIcon.svg';
 
 const styles = {
   md: {

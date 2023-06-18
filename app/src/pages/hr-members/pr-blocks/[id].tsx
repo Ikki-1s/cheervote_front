@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { getAllHrPrBlocksIds, getHrPrBlock, getHrMembersOfPrBlock, valueof } from 'domains';
 import Template from 'components/templates/hr-members/pr-blocks/HrMembersOfPrBlock';
+import Meta from 'components/organisms/Meta';
 
 interface Params extends ParsedUrlQuery {
   id: string;
@@ -10,7 +11,12 @@ interface Params extends ParsedUrlQuery {
 type Props = Parameters<typeof Template>[0];
 
 const HrMemberOfPrBlock: NextPage<Props> = ({ hrPrBlock, hrMembersOfPrBlockTable }) => {
-  return <Template hrPrBlock={hrPrBlock} hrMembersOfPrBlockTable={hrMembersOfPrBlockTable} />;
+  return (
+    <>
+      <Meta pageTitle='衆議院比例代表選出議員' pageDesc='衆議院の比例代表で選出された議員です。' />
+      <Template hrPrBlock={hrPrBlock} hrMembersOfPrBlockTable={hrMembersOfPrBlockTable} />
+    </>
+  );
 };
 
 export default HrMemberOfPrBlock;

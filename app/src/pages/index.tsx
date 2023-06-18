@@ -5,6 +5,7 @@ import BeforeSigninHome from 'components/templates/home/BeforeSigninHome';
 import AfterSigninHome from 'components/templates/home/AfterSigninHome';
 import { SignedInHome } from 'domains';
 import { eliminateToHuKen } from 'utils';
+import Meta from 'components/organisms/Meta';
 
 const Home: NextPage = () => {
   const { data: signedInHomesData, isLoading } = useSWRImmutable(
@@ -14,17 +15,26 @@ const Home: NextPage = () => {
 
   if (isLoading) return <></>;
 
-  if (!signedInHomesData) return <BeforeSigninHome />;
+  if (!signedInHomesData)
+    return (
+      <>
+        <Meta />
+        <BeforeSigninHome />
+      </>
+    );
 
   const afterSigninHome = adjustAfterSigninHomeData(signedInHomesData);
 
   return (
-    <AfterSigninHome
-      userConstituencyView={afterSigninHome.userConstituencyView}
-      activeCvTerms={afterSigninHome.activeCvTerms}
-      hrAccordionDetail={afterSigninHome.hrAccordionDetail}
-      hcAccordionDetail={afterSigninHome.hcAccordionDetail}
-    />
+    <>
+      <Meta />
+      <AfterSigninHome
+        userConstituencyView={afterSigninHome.userConstituencyView}
+        activeCvTerms={afterSigninHome.activeCvTerms}
+        hrAccordionDetail={afterSigninHome.hrAccordionDetail}
+        hcAccordionDetail={afterSigninHome.hcAccordionDetail}
+      />
+    </>
   );
 };
 

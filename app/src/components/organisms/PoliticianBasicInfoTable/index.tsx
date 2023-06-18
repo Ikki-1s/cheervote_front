@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { color, fontWeight, typography } from 'styles/theme';
 import { ageCalculation } from 'utils/ageCaluculation';
 import SnsIcon from 'components/atoms/SnsIcon';
-import PoliticianNoImageIcon from '/public/PoliticianNoImageIcon.svg';
+import PoliticianNoImageIcon from 'assets/PoliticianNoImageIcon.svg';
 
 const styles = {
   wrap: css`

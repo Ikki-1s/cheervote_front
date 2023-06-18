@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CheervoteEvaluationParams } from 'types';
 import { useContext, useState } from 'react';
-import { CheervotePostDataContext } from './providers/CheervoteDataProvider';
+import { CheervotePostDataContext } from 'providers/CheervoteDataProvider';
 
 type Inputs = CheervoteEvaluationParams;
 
