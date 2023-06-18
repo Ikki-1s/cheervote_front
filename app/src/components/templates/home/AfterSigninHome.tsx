@@ -48,7 +48,7 @@ const AfterSigninHome = ({
             </AccordionMenu>
           </div>
           <div>
-            <AccordionMenu title='マイ選挙区の参議院議員' defaultIsOpened={false}>
+            <AccordionMenu title='マイ選挙区の参議院議員' defaultIsOpened>
               {hcAccordionDetail.map((data) => {
                 return <AccordionDetail key={data.politicianListData.politicianId} {...data} />;
               })}
