@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { css } from '@emotion/react';
 import { fontWeight, typography } from 'styles/theme';
+import PoliticianNoImageIcon from '/public/PoliticianNoImageIcon.svg';
 
 const styles = {
   md: {
@@ -102,11 +103,16 @@ const PoliticianListData = ({
 }: PoliticianListDataProps) => {
   return (
     <div css={styles[styleSize].wrap}>
-      {displayImage && (
+      {displayImage && imageSrc ? (
         <Image
-          src={imageSrc ? imageSrc : '/UserImage.png'}
+          src={imageSrc}
           alt='議員の顔写真'
           layout='fixed'
+          width={styles[styleSize].imageWidth}
+          height={styles[styleSize].imageHeight}
+        />
+      ) : (
+        <PoliticianNoImageIcon
           width={styles[styleSize].imageWidth}
           height={styles[styleSize].imageHeight}
         />
