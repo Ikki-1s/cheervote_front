@@ -23,8 +23,8 @@ const Meta = ({ pageTitle, pageDesc, pageImg, pageImgW, pageImgH }: MetaProps) =
 
   // OGP画像
   const img = pageImg || siteImg.src;
-  const imgW = pageImgW || siteImg.width;
-  const imgH = pageImgH || siteImg.height;
+  const imgW = pageImgW || siteImg.width.toString();
+  const imgH = pageImgH || siteImg.height.toString();
   const imgUrl = img.startsWith('https') ? img : `${siteUrl}${img}`;
 
   return (
