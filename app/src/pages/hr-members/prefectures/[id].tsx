@@ -7,6 +7,7 @@ import {
   valueof,
 } from 'domains';
 import Template from 'components/templates/hr-members/prefectures/HrMembersOfPrefecture';
+import Meta from 'components/organisms/Meta';
 
 interface Params extends ParsedUrlQuery {
   id: string;
@@ -16,10 +17,16 @@ type Props = Parameters<typeof Template>[0];
 
 const HrMembersOfPrefecture: NextPage<Props> = ({ prefectureName, hrMembersOfPrefectureTable }) => {
   return (
-    <Template
-      prefectureName={prefectureName}
-      hrMembersOfPrefectureTable={hrMembersOfPrefectureTable}
-    />
+    <>
+      <Meta
+        pageTitle='衆議院小選挙区選出議員(都道府県別)'
+        pageDesc='各都道府県の衆議院小選挙区から選出された議員です。'
+      />
+      <Template
+        prefectureName={prefectureName}
+        hrMembersOfPrefectureTable={hrMembersOfPrefectureTable}
+      />
+    </>
   );
 };
 

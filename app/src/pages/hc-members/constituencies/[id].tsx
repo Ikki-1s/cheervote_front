@@ -7,6 +7,7 @@ import {
   getHcMembersOfConstituency,
   valueof,
 } from 'domains';
+import Meta from 'components/organisms/Meta';
 
 interface Params extends ParsedUrlQuery {
   id: string;
@@ -15,7 +16,12 @@ interface Params extends ParsedUrlQuery {
 type Props = Parameters<typeof Template>[0];
 
 const HcMembersOfConstituency: NextPage<Props> = ({ hcConstituency, hcMembersTable }) => {
-  return <Template hcConstituency={hcConstituency} hcMembersTable={hcMembersTable} />;
+  return (
+    <>
+      <Meta pageTitle='参議院選挙区選出議員' pageDesc='参議院の選挙区から選出された議員です。' />
+      <Template hcConstituency={hcConstituency} hcMembersTable={hcMembersTable} />
+    </>
+  );
 };
 
 export default HcMembersOfConstituency;

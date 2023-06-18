@@ -1,11 +1,17 @@
 import { GetStaticProps, NextPage } from 'next';
 import Template from 'components/templates/hc-members/pr/HcMembersOfPr';
 import { getHcMembersOfPr, valueof } from 'domains';
+import Meta from 'components/organisms/Meta';
 
 type Props = Parameters<typeof Template>[0];
 
 const HcMembersOfPr: NextPage<Props> = ({ hcMembersTable }) => {
-  return <Template hcMembersTable={hcMembersTable} />;
+  return (
+    <>
+      <Meta pageTitle='参議院全国比例選出議員' pageDesc='参議院の全国比例で選出された議員です。' />
+      <Template hcMembersTable={hcMembersTable} />
+    </>
+  );
 };
 
 export default HcMembersOfPr;

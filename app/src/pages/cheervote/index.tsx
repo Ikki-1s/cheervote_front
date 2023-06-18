@@ -3,11 +3,17 @@ import { parseCookies } from 'nookies';
 import { CvPageData, getCvPageData, getCvQuestionAndValues, valueof } from 'domains';
 import { eliminateToHuKen } from 'utils';
 import Template from 'components/templates/cheervote/Cheervote';
+import Meta from 'components/organisms/Meta';
 
 type Props = Parameters<typeof Template>[0];
 
 const Cheervote: NextPage<Props> = (props: Props) => {
-  return <Template {...props} />;
+  return (
+    <>
+      <Meta pageTitle='評価の投票' pageDesc='議員への評価を投票するページです。' />
+      <Template {...props} />
+    </>
+  );
 };
 
 export default Cheervote;

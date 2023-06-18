@@ -9,6 +9,7 @@ import {
 } from 'domains';
 import { eliminateToHuKen } from 'utils';
 import Template from 'components/templates/political-parties/PoliticalPartyMembers';
+import Meta from 'components/organisms/Meta';
 
 type Props = Parameters<typeof Template>[0];
 
@@ -17,7 +18,15 @@ interface Params extends ParsedUrlQuery {
 }
 
 const PoliticalPartyMember: NextPage<Props> = (props: Props) => {
-  return <Template {...props} />;
+  return (
+    <>
+      <Meta
+        pageTitle={props.politicalPartyName}
+        pageDesc={`${props.politicalPartyName}の現役の国会議員の一覧ページです。`}
+      />
+      <Template {...props} />
+    </>
+  );
 };
 
 export default PoliticalPartyMember;
