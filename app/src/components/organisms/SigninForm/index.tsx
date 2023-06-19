@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
-import { signin, SigninParams } from 'domains';
+import { guestSignin, signin, SigninParams } from 'domains';
 import { setClientSideCookie } from 'utils';
 import ColorButton from 'components/atoms/ColorButton';
 import FormLabel from 'components/atoms/FormLabel';
 import FormSubmitErrorMessage from 'components/atoms/FormSubmitErrorMessage';
 import FormInputErrorMessage from 'components/atoms/FormInputErrorMessage';
 import Input from 'components/atoms/Input';
+import { color, fontWeight } from 'styles/theme';
 
 const styles = {
   wrap: css`
@@ -31,6 +32,30 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: 4px;
+  `,
+};
+
+const guestSigninStyle = {
+  wrap: css`
+    margin-top: 44px;
+  `,
+  button: css`
+    background-color: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 2px;
+    appearance: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    color: ${color.text.normal};
+    &:hover {
+      background-color: ${color.blue.hover};
+    }
+  `,
+  span: css`
+    text-align: center;
+    ${fontWeight.medium}
   `,
 };
 
@@ -58,8 +83,26 @@ const SigninForm = () => {
 
       if (res.status === 200) {
         setClientSideCookie(res);
-        // router.push('/');
-        router.back();
+        router.push('/');
+        // router.back();
+      } else {
+        console.log(res);
+        setAlertMessageOpen(true);
+      }
+    } catch (err) {
+      console.log(err);
+      setAlertMessageOpen(true);
+    }
+  };
+
+  const onGuestSinginClick = async () => {
+    try {
+      const res = await guestSignin();
+
+      if (res.status === 200) {
+        setClientSideCookie(res);
+        router.push('/');
+        // router.back();
       } else {
         console.log(res);
         setAlertMessageOpen(true);
@@ -119,6 +162,14 @@ const SigninForm = () => {
           ログイン
         </ColorButton>
       </form>
+      <div css={guestSigninStyle.wrap}>
+        <button onClick={onGuestSinginClick} css={guestSigninStyle.button}>
+          <span css={guestSigninStyle.span}>
+            ゲストログインはこちら
+            <br /> （架空の議員で評価投票を試すことができます）
+          </span>
+        </button>
+      </div>
     </div>
   );
 };
