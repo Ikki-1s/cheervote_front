@@ -92,7 +92,7 @@ const Header = ({
       ) : userDropDownMenu ? (
         <div css={styles.afterLoginWrap}>
           <NavigationDropDownButton
-            title={userDropDownMenu.userName}
+            title={`${userDropDownMenu.userName} さん`}
             height={40.25}
             fontSize='sm'
             containerFlexEnd

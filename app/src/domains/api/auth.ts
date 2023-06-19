@@ -41,6 +41,11 @@ export const signin = (params: SigninParams) => {
   });
 };
 
+// ゲストサインイン
+export const guestSignin = () => {
+  return axios.post(clientSideBaseUrl + 'guests/sign_in');
+};
+
 // サインアウト（ログアウト）
 export const signout = () => {
   return axios.delete(clientSideBaseUrl + 'sign_out', {
