@@ -14,6 +14,7 @@ const styles = {
     background: ${color.background.normal};
     border-radius: 6px;
     color: ${color.text.normal};
+    width: max-content;
     &:hover {
       background: ${color.blue.hover};
       border-radius: 6px;

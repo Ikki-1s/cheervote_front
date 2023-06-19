@@ -28,6 +28,16 @@ export const getPoliticalPartiesHavingActiveMembersIds = async () => {
     politicalPartiesHavingActiveMembers.length &&
     politicalPartiesHavingActiveMembers.every(isPoliticalPartyHavingActiveMember)
   ) {
+    ///////////// ゲストユーザー用 /////////////
+    politicalPartiesHavingActiveMembers[politicalPartiesHavingActiveMembers.length] = {
+      id: 17,
+      name_kanji: '（架空）ＹＹ党',
+      name_kana: 'わいわいとう',
+      total: 7,
+      hr_count: 3,
+      hc_count: 4,
+    };
+    ///////////// ゲストユーザー用 /////////////
     return politicalPartiesHavingActiveMembers.map((politicalParty) => {
       return {
         params: {

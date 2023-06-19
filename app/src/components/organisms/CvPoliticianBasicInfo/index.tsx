@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { css } from '@emotion/react';
 import { typography } from 'styles/theme';
 import Link from 'next/link';
+import PoliticianNoImageIcon from 'assets/PoliticianNoImageIcon.svg';
 
 const styles = {
   wrap: css`
@@ -78,13 +79,18 @@ const CvPoliticianBasicInfo = ({
 }: CvPoliticianBasicInfoProps) => {
   return (
     <div css={styles.wrap}>
-      <Image
-        src={politician.image ? politician.image : '/UserImage.png'}
-        alt='議員の顔写真'
-        layout='fixed'
-        width={styles.image.width}
-        height={styles.image.height}
-      />
+      {politician.image ? (
+        <Image
+          src={politician.image}
+          alt='議員の顔写真'
+          layout='fixed'
+          width={styles.image.width}
+          height={styles.image.height}
+        />
+      ) : (
+        <PoliticianNoImageIcon width={styles.image.width} height={styles.image.height} />
+      )}
+
       <div css={styles.textWrap}>
         <div css={styles.politicianNameWrap}>
           <Link href={`/politicians/${politician.id}`} passHref>
