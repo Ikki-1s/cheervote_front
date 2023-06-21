@@ -4,13 +4,24 @@ import PoliticalPartyCard, { PoliticalPartyCardProps } from '../PoliticalPartyCa
 const styles = {
   wrap: css`
     display: flex;
-    flex-wrap: wrap;
-    /* justify-content: flex-start; */
     justify-content: center;
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 20px;
-    /* width: 940px; */
+  `,
+  container: css`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 26px;
+    &::before {
+      content: '';
+      display: block;
+      width: 300px;
+      order: 1;
+    }
+    &::after {
+      content: '';
+      display: block;
+      width: 300px;
+    }
   `,
 };
 
@@ -23,9 +34,11 @@ const PoliticalPartiesTable = ({
 }) => {
   return (
     <div css={styles.wrap}>
-      {politicalParties.map((politicalParty) => {
-        return <PoliticalPartyCard key={politicalParty.politicalPartyId} {...politicalParty} />;
-      })}
+      <div css={styles.container}>
+        {politicalParties.map((politicalParty) => {
+          return <PoliticalPartyCard key={politicalParty.politicalPartyId} {...politicalParty} />;
+        })}
+      </div>
     </div>
   );
 };
