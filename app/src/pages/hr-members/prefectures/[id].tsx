@@ -73,5 +73,6 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
       prefectureName,
       hrMembersOfPrefectureTable,
     },
+    revalidate: 5,
   };
 };

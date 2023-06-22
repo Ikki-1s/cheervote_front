@@ -58,5 +58,6 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
       hrPrBlock,
       hrMembersOfPrBlockTable,
     },
+    revalidate: 5,
   };
 };

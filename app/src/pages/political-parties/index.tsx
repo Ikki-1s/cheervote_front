@@ -36,5 +36,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     props: {
       politicalPartiesTable,
     },
+    revalidate: 5,
   };
 };
