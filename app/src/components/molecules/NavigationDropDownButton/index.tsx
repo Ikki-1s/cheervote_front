@@ -136,28 +136,30 @@ const NavigationDropDownButton = ({
   });
 
   return (
-    <div css={[styles.container, addContainerStyles]}>
-      <div ref={dropDownRef}>
-        <button
-          type='button'
-          css={[styles.dropDownButton, addButtonStyles]}
-          // onMouseDown={handleMouseDown}
-          // onTouchEnd={handleMouseDown}
-          onClick={handleMouseDown}
-        >
-          {withUserIcon && (
-            <span css={styles.userIconWrap}>
-              {userIconSrc ? (
-                <UserIcon iconSrc={userIconSrc} widthAndHeight={33.25} />
-              ) : (
-                <UserIcon widthAndHeight={33.25} />
-              )}
-            </span>
-          )}
-          {adjustTitle}
-        </button>
-      </div>
-      {isOpen && <div css={styles.children}>{children}</div>}
+    <div css={[styles.container, addContainerStyles]} ref={dropDownRef}>
+      <button
+        type='button'
+        css={[styles.dropDownButton, addButtonStyles]}
+        // onMouseDown={handleMouseDown}
+        // onTouchEnd={handleMouseDown}
+        onClick={handleMouseDown}
+      >
+        {withUserIcon && (
+          <span css={styles.userIconWrap}>
+            {userIconSrc ? (
+              <UserIcon iconSrc={userIconSrc} widthAndHeight={33.25} />
+            ) : (
+              <UserIcon widthAndHeight={33.25} />
+            )}
+          </span>
+        )}
+        {adjustTitle}
+      </button>
+      {isOpen && (
+        <div css={styles.children} onClick={handleMouseDown}>
+          {children}
+        </div>
+      )}
     </div>
   );
 };
