@@ -42,5 +42,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     props: {
       hcMembersTable,
     },
+    revalidate: 5,
   };
 };

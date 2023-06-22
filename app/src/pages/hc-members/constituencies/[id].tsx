@@ -64,5 +64,6 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
       hcConstituency,
       hcMembersTable,
     },
+    revalidate: 5,
   };
 };
