@@ -127,11 +127,11 @@ const NavigationDropDownButton = ({
   useEffect(() => {
     // 画面外クリック・タッチのイベントを設定
     document.addEventListener('click', handleDocumentClick, false);
-    document.addEventListener('touchend', handleDocumentClick, false);
+    document.addEventListener('touchstart', handleDocumentClick, false);
 
     return function cleanup() {
       document.removeEventListener('click', handleDocumentClick, false);
-      document.removeEventListener('touchend', handleDocumentClick, false);
+      document.removeEventListener('touchstart', handleDocumentClick, false);
     };
   });
 
