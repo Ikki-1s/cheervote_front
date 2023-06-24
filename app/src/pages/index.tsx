@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 import { getSignedInHomesData } from 'domains/api/signedInHomes';
 import BeforeSigninHome from 'components/templates/home/BeforeSigninHome';
 import AfterSigninHome from 'components/templates/home/AfterSigninHome';
@@ -8,10 +8,7 @@ import { eliminateToHuKen } from 'utils';
 import Meta from 'components/organisms/Meta';
 
 const Home: NextPage = () => {
-  const { data: signedInHomesData, isLoading } = useSWRImmutable(
-    '/signed_in_homes',
-    getSignedInHomesData,
-  );
+  const { data: signedInHomesData, isLoading } = useSWR('/signed_in_homes', getSignedInHomesData);
 
   if (isLoading) return <></>;
 

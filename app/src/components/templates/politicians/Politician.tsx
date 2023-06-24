@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Layout from 'components/templates/common/Layout';
-import PageCenterWrap from '../common/PageCenterWrap';
+import PageCenterWrap from 'components/templates/common/PageCenterWrap';
 import PoliticianCvResult from 'components/ecosystems/PoliticianCvResult';
 import PoliticianBasicInfoTable from 'components/organisms/PoliticianBasicInfoTable';
+import ReplacementText from 'components/atoms/ReplacementText';
+import LinkButton from 'components/atoms/LinkButton';
 
 const styles = {
-  notFound: css`
-    padding-top: 100px;
-  `,
   wrap: css`
     display: flex;
     flex-direction: column;
@@ -33,9 +33,15 @@ const Politician = ({ politicianBasicInfoTable }: PoliticianTemplateProps) => {
             <PoliticianCvResult politicianId={politicianId} />
           </div>
         ) : (
-          <div css={styles.notFound}>
-            指定の政治家がいないか、現役議員ではないため、表示できません
-          </div>
+          // cf. organisms/ReplacementMessageBox
+          <ReplacementText marginTop={120} gap={60} alignItems='center'>
+            <p>指定の政治家がいないか、現役議員ではないため、表示できません</p>
+            <Link href='/' passHref>
+              <LinkButton fontSize='lg' bold paddingLR={100}>
+                TOPページへ
+              </LinkButton>
+            </Link>
+          </ReplacementText>
         )}
       </PageCenterWrap>
     </Layout>
