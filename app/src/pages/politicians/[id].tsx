@@ -13,13 +13,19 @@ import Meta from 'components/organisms/Meta';
 type Props = Parameters<typeof Template>[0];
 
 const Politician: NextPage<Props> = ({ politicianBasicInfoTable }: Props) => {
-  const politicianName = `${politicianBasicInfoTable?.politician.lastNameKanji}${
-    politicianBasicInfoTable?.politician.firstNameKanji &&
-    `${politicianBasicInfoTable?.politician.firstNameKanji}`
-  }`;
+  const pageTitle =
+    politicianBasicInfoTable?.politician.lastNameKanji &&
+    politicianBasicInfoTable.politician.firstNameKanji
+      ? `${politicianBasicInfoTable.politician.lastNameKanji}${politicianBasicInfoTable.politician.firstNameKanji}`
+      : '指定の政治家が見つかりません';
+  const pageDesc =
+    politicianBasicInfoTable?.politician.lastNameKanji &&
+    politicianBasicInfoTable.politician.firstNameKanji
+      ? `${politicianBasicInfoTable.politician.lastNameKanji}${politicianBasicInfoTable.politician.firstNameKanji}議員の個人ページです`
+      : '指定の政治家がいないか、現役議員ではないため、表示できません';
   return (
     <>
-      <Meta pageTitle={politicianName} pageDesc={`${politicianName}議員の個人ページです。`} />
+      <Meta pageTitle={pageTitle} pageDesc={pageDesc} />
       <Template politicianBasicInfoTable={politicianBasicInfoTable} />
     </>
   );

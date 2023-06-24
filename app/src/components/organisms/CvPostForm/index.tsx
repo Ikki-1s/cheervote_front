@@ -6,6 +6,7 @@ import { CvEvaluationParams, CvQuestionAndValues } from 'domains';
 import ColorButton from 'components/atoms/ColorButton';
 import QuestionSentence from 'components/atoms/QuestionSentence';
 import RadioButtonAndLabel from 'components/molecules/RadioButtonAndLabel';
+import CvCompleteMessageBox from 'components/organisms/CvCompleteMessageBox';
 
 const styles = {
   wrap: css`
@@ -72,7 +73,7 @@ const CvPostForm = ({ postAction, cvQuestionAndValues }: CvPostFormOrganismProps
   };
 
   return cvComplete ? (
-    <p>評価の投票が完了しました！！</p>
+    <CvCompleteMessageBox />
   ) : (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.wrap}>

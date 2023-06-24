@@ -7,6 +7,7 @@ type Props = {
   width?: number;
   height?: number;
   paddingLR?: number;
+  widthMaxContent?: boolean;
 };
 
 const LinkButton = styled.a<Props>`
@@ -15,6 +16,7 @@ const LinkButton = styled.a<Props>`
   ${(props) => props.width && `width: ${props.width}px;`}
   ${(props) => props.height && `height: ${props.height}px;`}
   ${(props) => (props.paddingLR ? `padding: 10px ${props.paddingLR}px;` : 'padding: 10px;')}
+  ${(props) => props.widthMaxContent && 'width: max-content;'}
   border-radius: 6px;
   text-align: center;
   &:hover {

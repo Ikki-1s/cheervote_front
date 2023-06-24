@@ -1,5 +1,6 @@
 import { CvPageData, CvPostData, CvQuestionAndValues, postCvEvaluation } from 'domains';
 import Organism from 'components/organisms/CvPostForm';
+import ReplacementMessageBox from 'components/organisms/ReplacementMessageBox';
 
 type CvPostFormEcosystemProps = {
   cvPageData: CvPageData;
@@ -21,35 +22,19 @@ const CvPostForm = ({ cvPageData, cvQuestionAndValues }: CvPostFormEcosystemProp
         cvPageData.is_login_user_possible_to_cv_on_term ? (
           <Organism postAction={postAction} cvQuestionAndValues={cvQuestionAndValues} />
         ) : (
-          <p>
-            現在の投票受付期間にすでに投票済みです。
-            <br />
-            次回の受付期間での投票もよろしくお願いいたします。
-          </p>
+          <ReplacementMessageBox messagePattern='alreadyVoted' />
         )
       ) : (
-        <p>
-          マイ選挙区の議員でないため、この議員に
-          <br />
-          評価の投票をすることはできません。
-        </p>
+        <ReplacementMessageBox messagePattern='notMyConstituencyMember' />
       )
     ) : (
-      <p>
-        マイ選挙区の議員である場合、ログインすると
-        <br />
-        評価の投票をすることができます。
-      </p>
+      <ReplacementMessageBox messagePattern='notLoggedin' />
     )
   ) : (
-    <p>評価の投票の受付期間外です。</p>
+    <ReplacementMessageBox messagePattern='outOfCvTerm' />
   );
   // ) : (
-  //   <p>
-  //     指定の政治家がいないか、現役議員ではないため、
-  //     <br />
-  //     評価の投票をすることができません。
-  //   </p>
+  // <ReplacementMessageBox messagePattern='ActiveMemberNotFound' />
   // );
 };
 
