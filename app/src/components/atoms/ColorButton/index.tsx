@@ -48,6 +48,7 @@ type Props = {
   marginBottom?: number;
   marginLeft?: number;
   width?: number;
+  widthMaxContent?: boolean;
   height?: number;
 };
 
@@ -67,6 +68,7 @@ const ColorButton = styled.button<Props>`
   ${(props) => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}
   ${(props) => props.marginLeft && `margin-left: ${props.marginLeft}px;`}
   ${(props) => props.width && `width: ${props.width}px;`}
+  ${(props) => props.widthMaxContent && 'width: max-content;'}
   ${(props) => props.height && `height: ${props.height}px;`}
 `;
 

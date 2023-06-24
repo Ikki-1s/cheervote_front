@@ -4,6 +4,7 @@ import PageCenterWrap from 'components/templates/common/PageCenterWrap';
 import CvPoliticianBasicInfo from 'components/organisms/CvPoliticianBasicInfo';
 import CvMyConstituencyMemberBadge from 'components/organisms/CvMyConstituencyMemberBadge';
 import ActiveCvTerm from 'components/organisms/ActiveCvTerm';
+import ReplacementMessageBox from 'components/organisms/ReplacementMessageBox';
 import CvPostForm from 'components/ecosystems/CvPostForm';
 
 const styles = {
@@ -41,8 +42,9 @@ const Cheervote = ({
             </PageCenterWrap>
           </>
         ) : (
+          // 指定の政治家.idの政治から見つからないか、現役議員ではない場合
           <PageCenterWrap>
-            <p>指定の政治家がいないか、現役議員ではないため、評価の投票をすることができません。</p>
+            <ReplacementMessageBox messagePattern='ActiveMemberNotFound' />
           </PageCenterWrap>
         )}
       </div>
