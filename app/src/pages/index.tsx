@@ -8,7 +8,9 @@ import { eliminateToHuKen } from 'utils';
 import Meta from 'components/organisms/Meta';
 
 const Home: NextPage = () => {
-  const { data: signedInHomesData, isLoading } = useSWR('/signed_in_homes', getSignedInHomesData);
+  const { data: signedInHomesData, isLoading } = useSWR('/signed_in_homes', getSignedInHomesData, {
+    revalidateOnFocus: false,
+  });
 
   if (isLoading) return <></>;
 
