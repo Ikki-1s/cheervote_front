@@ -1,9 +1,22 @@
+import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { CurrentUserContext } from 'stores/CurrentUserProvider';
 import Template from 'components/templates/signup/Signup';
 import Meta from 'components/organisms/Meta';
 
 const Signup: NextPage = () => {
-  return (
+  const { currentUser } = useContext(CurrentUserContext);
+  const router = useRouter();
+  const [isDisplay, setIsDisplay] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push('/');
+    }
+  }, []);
+
+  return isDisplay ? (
     <>
       <Meta
         pageTitle='ユーザー登録'
@@ -11,6 +24,8 @@ const Signup: NextPage = () => {
       />
       <Template />
     </>
+  ) : (
+    <></>
   );
 };
 

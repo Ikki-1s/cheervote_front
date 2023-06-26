@@ -1,18 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
-import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { CurrentUserContext } from 'stores/CurrentUserProvider';
 import Meta from 'components/organisms/Meta';
-import Template from 'components/templates/signin/Signin';
+import Template from 'components/templates/settings/delete-account/DeleteAccount';
 
-const Signin: NextPage = () => {
+const DeleteAccount = () => {
   const { currentUser } = useContext(CurrentUserContext);
   const router = useRouter();
   const [isDisplay, setIsDisplay] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentUser) {
-      router.push('/');
+    if (!currentUser) {
+      router.push('/signin');
     } else {
       setIsDisplay(true);
     }
@@ -20,7 +19,7 @@ const Signin: NextPage = () => {
 
   return isDisplay ? (
     <>
-      <Meta pageTitle='ログイン' pageDesc='CHEERVOTEのログインページです。' />
+      <Meta pageTitle='アカウントの削除' pageDesc='アカウントの削除ページです。' />
       <Template />
     </>
   ) : (
@@ -28,4 +27,4 @@ const Signin: NextPage = () => {
   );
 };
 
-export default Signin;
+export default DeleteAccount;

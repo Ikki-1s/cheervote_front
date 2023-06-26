@@ -10,6 +10,11 @@ export const color = {
     normal: '#E1877A',
     hover: '#E0B1AA',
   },
+  dangerousRed: {
+    // 赤（警告用）
+    normal: '#FF0000',
+    hover: '#FF0000' + '66', // 不透明度40%
+  },
   yellow: '#F7C646',
   deepBluePurple: '#2A597C', // for default text color
   gray: '#D8D8D8',

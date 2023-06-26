@@ -25,6 +25,13 @@ const customStyles = {
         background: ${color.pink.hover};
       }
     `,
+    dangerousRed: css`
+      color: ${color.text.white};
+      background: ${color.dangerousRed.normal};
+      &:hover {
+        background: ${color.dangerousRed.hover};
+      }
+    `,
     disabled: css`
       color: ${color.text.disabled};
       background: ${color.background.disabled};
@@ -34,7 +41,7 @@ const customStyles = {
 };
 
 type Props = {
-  color: 'blue' | 'pink' | 'disabled';
+  color: 'blue' | 'pink' | 'dangerousRed' | 'disabled';
   fontSize?: keyof typeof typography;
   fontWeight?: keyof typeof fontWeight;
   padding?: number;
