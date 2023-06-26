@@ -3,6 +3,8 @@ import useSWR from 'swr';
 import Organism from 'components/organisms/Header';
 import { getCurrentUser, signout } from 'domains';
 import { destroyClientSideCookie } from 'utils/cookie';
+import { CurrentUserContext } from 'stores/CurrentUserProvider';
+import { useContext } from 'react';
 
 const navigationDropDownData = [
   {
@@ -27,12 +29,13 @@ const navigationDropDownData = [
 const userDropDownDetails = [
   {
     title: 'アカウント設定',
-    url: '/',
+    url: '/settings',
   },
 ];
 
 const Header = () => {
   const router = useRouter();
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const handleSignout = async () => {
     try {
@@ -55,13 +58,18 @@ const Header = () => {
     }
   };
 
-  const { data, isLoading } = useSWR('/auth/sessions', getCurrentUser, {
+  // const { data, isLoading } = useSWR('/auth/sessions', getCurrentUser, {
+  const { isLoading } = useSWR('/auth/sessions', getCurrentUser, {
     revalidateOnFocus: false,
     shouldRetryOnError: false,
+    onSuccess: (data) => setCurrentUser(data),
   });
 
-  const userDropDownMenu = data?.name
-    ? { userName: data.name, userIconSrc: data.image }
+  // const userDropDownMenu = data?.name
+  //   ? { userName: data.name, userIconSrc: data.image }
+  //   : undefined;
+  const userDropDownMenu = currentUser?.name
+    ? { userName: currentUser.name, userIconSrc: currentUser.image }
     : undefined;
 
   return (

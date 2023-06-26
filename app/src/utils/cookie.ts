@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { isPropertyAccessible } from 'domains';
-import { destroyCookie, setCookie } from 'nookies';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
 // Client-only Cookies
 // signup()のレスポンスをそのまま引数にセットする
@@ -14,12 +14,13 @@ export const setClientSideCookie = (res: AxiosResponse) => {
 };
 
 export const destroyClientSideCookie = () => {
-  destroyCookie(null, '_access_token');
-  destroyCookie(null, '_client');
-  destroyCookie(null, '_uid');
+  destroyCookie(undefined, '_access_token');
+  destroyCookie(undefined, '_client');
+  destroyCookie(undefined, '_uid');
 };
 
 // リクエストヘッダーに付加するアクセストークンのオブジェクトをCookieから作成
+// アクセストークンのkey名はfrontとapiで異なるので、その変換を行っている
 export const setHeaderToken = (cookie?: { [key: string]: string }) => {
   const token = {
     'access-token': '',
@@ -39,4 +40,16 @@ export const setHeaderToken = (cookie?: { [key: string]: string }) => {
   }
 
   return token;
+};
+
+// Cookie内のアクセストークンの有無をチェック
+// あればheaderセット用に抽出したアクセストークンを返す
+// なければfalseを返す
+export const checkAndGetAccessToken = () => {
+  const cookie = parseCookies();
+  if (!cookie._access_token || !cookie._client || !cookie._uid) {
+    return false;
+  } else {
+    return setHeaderToken(cookie);
+  }
 };

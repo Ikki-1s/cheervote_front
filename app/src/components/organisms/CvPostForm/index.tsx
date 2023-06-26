@@ -7,6 +7,7 @@ import ColorButton from 'components/atoms/ColorButton';
 import QuestionSentence from 'components/atoms/QuestionSentence';
 import RadioButtonAndLabel from 'components/molecules/RadioButtonAndLabel';
 import CvCompleteMessageBox from 'components/organisms/CvCompleteMessageBox';
+import AlertMessageBox from 'components/atoms/AlertMessageBox';
 
 const styles = {
   wrap: css`
@@ -23,14 +24,6 @@ const styles = {
     /* align-items: flex-end; */
     align-items: center;
     gap: 50px;
-  `,
-  alert: css`
-    text-align: center;
-    border: 2px solid #f87171;
-    border-radius: 0.25rem;
-    background-color: #fee2e2;
-    padding: 0.75rem 1rem;
-    color: #b91c1c;
   `,
 };
 
@@ -78,9 +71,7 @@ const CvPostForm = ({ postAction, cvQuestionAndValues }: CvPostFormOrganismProps
     <form onSubmit={handleSubmit(onSubmit)}>
       <div css={styles.wrap}>
         {alertMessageOpen && (
-          <div css={styles.alert} role='alert'>
-            エラーが発生しました。ブラウザを更新してください
-          </div>
+          <AlertMessageBox>エラーが発生しました。ブラウザを更新してください</AlertMessageBox>
         )}
         <QuestionSentence id='evaluationGroupLabel'>
           {cvQuestionAndValues.cv_question.question_sentence}
