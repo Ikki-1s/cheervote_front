@@ -13,6 +13,8 @@ const Signup: NextPage = () => {
   useEffect(() => {
     if (currentUser) {
       router.push('/');
+    } else {
+      setIsDisplay(true);
     }
   }, []);
 
